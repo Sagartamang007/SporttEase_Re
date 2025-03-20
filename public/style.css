@@ -1,0 +1,580 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+/* Navbar */
+#navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Transparent black background */
+    color: #fff;
+    transition: background 0.3s ease-in-out; /* Smooth transition for background change */
+    z-index: 1000;
+}
+/* Default Navbar Styling (white background) */
+#navbar {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    /* Enable dropdown on hover */
+    .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+
+    /* Dropdown Toggle Icon */
+    .dropdown-icon {
+        margin-left: 5px;
+        transition: transform 0.3s ease;
+    }
+
+    /* Rotate icon on hover */
+    .nav-item.dropdown:hover .dropdown-icon {
+        transform: rotate(180deg);
+    }
+
+    /* Dropdown Items Hover Effect */
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #000;
+    }
+
+    /* Navbar Scroll Effects */
+    #navbar.scrolled {
+        background-color: #fff !important;
+        transition: background-color 0.3s ease;
+    }
+
+    #navbar.scrolled .navbar-brand {
+        color: #000 !important;
+    }
+/* Navbar when scrolled (black background) */
+#navbar.scrolled {
+    background-color:white !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Navbar Links Styling */
+.navbar-nav .nav-link {
+    position: relative;
+    color: white; /* Default text color when navbar is white */
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* Hover Effect: Underline */
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+
+/* Show the underline on hover */
+.navbar-nav .nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+/* Navbar Link Hover Color (white underline when navbar is white) */
+.navbar-nav .nav-link:hover {
+    color: white; /* Change the text color on hover */
+}
+
+/* Navbar when scrolled (black background and white text) */
+#navbar.scrolled .navbar-nav .nav-link {
+    color: black; /* Text color when navbar is black */
+}
+
+/* Navbar Link Hover Effect when scrolled */
+#navbar.scrolled .navbar-nav .nav-link:hover::after {
+    background-color: black; /* Underline turns black when scrolled */
+}
+
+#navbar.scrolled .navbar-nav .nav-link:hover {
+    color: black; /* Change the hover text color to black when scrolled */
+}
+
+/* Default Styling (transparent search bar) */
+form.d-flex .form-control,
+form.d-flex .btn {
+    background-color: transparent; /* Transparent background */
+    border: 1px solid #fff; /* White border */
+    color: white; /* White text color */
+}
+
+/* When scrolled, apply navbar link styles (without hover effects) */
+form.d-flex.scrolled .form-control,
+form.d-flex.scrolled .btn {
+    border: 1px solid white; /* Keep the white border */
+    color: black; /* White text color */
+}
+
+/* Focus State for the search input */
+form.d-flex.scrolled .form-control:focus,
+form.d-flex.scrolled .btn:focus {
+    outline: none; /* Remove default outline */
+    border: 1px solid white; /* Keep white border */
+    background-color: rgba(255, 255, 255, 0.1); /* Slightly visible background when focused */
+}
+
+/* Remove Hover Effect for the button */
+form.d-flex .btn:hover {
+    background-color: transparent; /* Keep the button transparent on hover */
+    color: white; /* Keep the text white */
+}
+
+/* If navbar is scrolled, prevent hover effect on the search button */
+form.d-flex.scrolled .btn:hover {
+    background-color: black;
+    border: 1px solid; /* No background change */
+    color:white; /* Keep the text white */
+}
+
+/* Focus for input field and button */
+form.d-flex.scrolled .form-control:focus,
+form.d-flex.scrolled .btn:focus {
+    outline: none; /* Remove outline */
+    border: 1px solid white; /* White border when focused */
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle background on focus */
+}
+
+.navbar-brand {
+    color: white !important;
+    transition: color 0.3s ease; /* Smooth transition for better UX */
+}
+.navbar.scrolled .navbar-brand {
+    color: black !important;
+}
+    /* Default: white toggler icon */
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    /* Black toggler icon when navbar is scrolled */
+    .scrolled .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+/*buttons*/
+.sums{
+    color: white;
+}
+.sums:hover{
+    color: black;
+    background-color: white;
+}
+
+/* Default button styles */
+.nums {
+    background-color: rgb(0, 128, 0);  /* Green background */
+    color: white;              /* White text */
+    padding: 10px 20px;        /* Add padding */
+    text-decoration: none;     /* Remove underline */
+    border-radius: 5px;        /* Round corners */
+    font-size: 16px;           /* Font size */
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;  /* Smooth transition */
+}
+
+/* Hover effect: transparent background */
+.nums:hover {
+    background-color: transparent;  /* Transparent background on hover */
+    color: rgb(0, 128, 0) ;                    /* Change text color to green */
+    opacity: 0.8;                    /* Slightly transparent */
+    border:1px solid  rgb(0, 128, 0);             /* Ensure border color matches text color */
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 100vh; /* Make the hero section take full viewport height */
+    overflow: hidden;
+}
+
+.video-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; /* Ensure the video stays behind content */
+}
+
+.video {
+    object-fit: cover; /* Make sure the video covers the entire container */
+    width: 100%;
+    height: 100%;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Add a dark overlay for better text visibility */
+    z-index: 1;
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the content vertically and horizontally */
+    z-index: 2;
+    color: white;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 3rem; /* Adjust font size for larger screens */
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 1.25rem; /* Adjust font size for larger screens */
+    margin-bottom: 20px;
+}
+
+.hero-content .btn {
+    font-size: 1.1rem; /* Adjust button font size */
+    padding: 10px 20px;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.5rem; /* Smaller font size on mobile */
+    }
+
+    .hero-content p {
+        font-size: 1.1rem; /* Smaller font size for mobile devices */
+    }
+
+    .hero-content .btn {
+        font-size: 1rem; /* Adjust button font size */
+        padding: 8px 16px; /* Adjust button padding */
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-content h1 {
+        font-size: 2rem; /* Smaller font size on very small screens */
+    }
+
+    .hero-content p {
+        font-size: 1rem; /* Adjust font size on small screens */
+    }
+
+    .hero-content .btn {
+        font-size: 0.9rem; /* Adjust button font size */
+        padding: 6px 12px; /* Adjust button padding */
+    }
+}
+/* Futsal Cards */
+.futsal-card {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1rem;
+    position: relative; /* Makes sure cards don't overflow */
+}
+
+/* Custom Swiper Buttons */
+.custom-swiper-button-next,
+.custom-swiper-button-prev {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: transparent;
+    color: rgb(0, 128, 0); /* Green color */
+    font-size: 30px;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.custom-swiper-button-next {
+    right: 10px; /* Positions the button outside the card */
+}
+
+.custom-swiper-button-prev {
+    left: 10px; /* Positions the button outside the card */
+}
+
+.custom-swiper-button-next:hover,
+.custom-swiper-button-prev:hover {
+    background-color: rgb(0, 128, 0); /* Green background on hover */
+    color: #fff; /* White arrow color on hover */
+}
+
+/* Book Now Button */
+.nums-but {
+    background-color: rgb(0, 128, 0); /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+.nums-but:hover {
+    border: 1px solid rgb(0, 128, 0);
+    background:none;
+    color: rgb(0, 128, 0); /* Text color on hover */
+    opacity: 0.8;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .custom-swiper-button-next,
+    .custom-swiper-button-prev {
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    .custom-swiper-button-next {
+        right: -20px; /* Adjust position for smaller screens */
+    }
+
+    .custom-swiper-button-prev {
+        left: -20px; /* Adjust position for smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .futsal-card {
+        margin: 5px;
+    }
+
+    .custom-swiper-button-next,
+    .custom-swiper-button-prev {
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    .custom-swiper-button-next {
+        right: -10px; /* Further adjustment for small screens */
+    }
+
+    .custom-swiper-button-prev {
+        left: -10px;
+    }
+}
+
+
+    /* Custom Tooltip Styling */
+    .tooltip-inner {
+        background-color: rgb(0, 128, 0);
+        /*Darkbackground*/color: #fff;
+        /*Whitetext*/padding: 8px 12px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        -ms-border-radius: 10px;
+        -o-border-radius: 10px;
+}
+
+    .tooltip.bs-tooltip-top .arrow::before {
+        border-top-color: #6c757d; /* Match the tooltip background */
+    }
+
+    .tooltip.bs-tooltip-bottom .arrow::before {
+        border-bottom-color: #6c757d; /* Match the tooltip background */
+    }
+
+    /* Ensure tooltip is triggered only by hover (no click) */
+    .btn {
+        pointer-events: auto !important; /* Ensure tooltips still trigger on hover */
+    }
+
+
+
+/*scroll bar*/
+/* For modern browsers */
+::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 10px; /* Optional: Rounded corners */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbar color */
+    border-radius: 10px; /* Optional: Rounded corners */
+    border: 3px solid #f0f0f0; /* Adds spacing around the scrollbar thumb */
+  }
+
+
+/*bookins*/
+    /* Full-width landscape cover picture */
+    .cover-section {
+        position: relative;
+        height: 300px; /* Adjust height as per requirement */
+    }
+
+    .cover-section img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+    .left-side {
+        flex: 1;
+        text-align: center;
+    }
+
+    .right-side {
+        flex: 2;
+        text-align: left;
+    }
+
+    .rounded-image {
+        width: 150px; /* Adjust the size as needed */
+        height: 150px;
+        border-radius: 50%; /* Makes the image round */
+        object-fit: cover; /* Ensures the image covers the container properly */
+    }
+    /* Description section */
+    .description-section {
+        padding: 20px;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: -50px; /* Overlap effect */
+        z-index: 2;
+        position: relative;
+    }
+
+    .description-section p {
+        font-size: 1rem;
+        color: #333;
+        margin: 0;
+    }
+
+    /* Booking slot styles */
+    .slot {
+        min-width: 150px;
+        text-align: center;
+    }
+
+    .slot.booked {
+        background: #f8d7da;
+        color: #842029;
+        border-color: #f5c2c7;
+    }
+
+    .slot:not(.booked):hover {
+        background: #007bff;
+        color: white;
+        border-color: #0056b3;
+    }
+
+    /* Calendar container */
+.flatpickr-calendar {
+    background-color: #f4f4f4; /* Light grey background */
+    border-radius: 8px;         /* Rounded corners */
+    border: 2px solid #198754;  /* Green border */
+}
+
+
+
+
+
+/* Days of the week section */
+.flatpickr-days .day {
+    background-color: #ffffff;  /* White background for days */
+    color: #333;                /* Dark text color */
+    border-radius: 4px;         /* Slight rounding of the day box */
+    transition: background-color 0.3s ease;
+}
+
+/* Highlight the current day */
+.flatpickr-days .today {
+    background-color: #198754;  /* Green background for today */
+    color: white;                /* White text */
+}
+
+/* Hover effect for the days */
+.flatpickr-days .day:hover {
+    background-color: #198754;  /* Green background on hover */
+    color: white;                /* White text on hover */
+}
+
+/* Selected date styling */
+.flatpickr-days .selected {
+    background-color: #198754;  /* Green background for selected date */
+    color: white;                /* White text */
+    border-radius: 50%;          /* Round the selected date */
+}
+
+/* Time selector dropdown */
+.flatpickr-time {
+    background-color: #198754; /* Light grey background */
+    border-radius: 8px;         /* Rounded corners */
+    border: 2px solid #198754;  /* Green border */
+    color: #333;                /* Dark text */
+}
+
+/* Button styling (optional) */
+.flatpickr-button {
+    background-color: #198754;  /* Green button */
+    color: white;                /* White text */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.flatpickr-button:hover {
+    background-color: #155d43;  /* Darker green when hovered */
+}
+
+/* Button active effect */
+.flatpickr-button:active {
+    background-color: #198754;  /* Green when active */
+}
+
+/* Button focus effect (when clicked/focused) */
+.flatpickr-button:focus {
+    background-color: #198754;  /* Green when focused */
+    outline: none;               /* Optional: Remove default focus outline */
+}
+
+
+
+/*time slot ui*/
+/* Styling for the time selector section */
+.time-selector select {
+    padding: 8px;
+    margin: 5px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Styling for the selected time */
+#selectedSlot {
+    font-size: 18px;
+    font-weight: bold;
+    color: #198754;
+}
+
