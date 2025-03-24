@@ -34,33 +34,47 @@
                 @endguest
 
                 @auth
-                    <!-- Profile Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <!-- Use the icon if the user does not have a profile picture -->
-                            @if(auth()->user()->profile_picture)
-                                <img src="{{ auth()->user()->profile_picture }}" alt="Profile Picture"
-                                     style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
-                            @else
-                                <!-- Default icon when there is no profile picture -->
-                                <i class="fa-regular fa-user" style="font-size: 30px;"></i>
-                            @endif
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="#">My Bookings</a></li>
-                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Edit Profile</a></li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-                            </li>
-                        </ul>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
-                    </li>
-                @endauth
+    @if(auth()->user()->type == 0)
+        <!-- If the user is a Vendor (type 0), show only a profile link -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('vendor.dashboard') }}">
+                @if(auth()->user()->profile_picture)
+                    <img src="{{ auth()->user()->profile_picture }}" alt="Profile Picture"
+                         style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                @else
+                    <i class="fa-regular fa-user" style="font-size: 30px;"></i>
+                @endif
+
+            </a>
+        </li>
+    @else
+        <!-- Profile Dropdown for other users -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @if(auth()->user()->profile_picture)
+                    <img src="{{ auth()->user()->profile_picture }}"
+                         style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                @else
+                    <i class="fa-regular fa-user" style="font-size: 30px;"></i>
+                @endif
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                <li><a class="dropdown-item" href="#">My Bookings</a></li>
+                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Edit Profile</a></li>
+                <li>
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+        </li>
+    @endif
+@endauth
+
             </ul>
         </div>
     </div>

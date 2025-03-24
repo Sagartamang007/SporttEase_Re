@@ -32,19 +32,19 @@
 
         <div class="row" id="futsalCards">
             @foreach($futsals as $futsal)
-            <div class="col-md-6 col-lg-4 futsal-card" data-name="{{ $futsal->name }}" data-price="{{ $futsal->price }}" data-location="{{ $futsal->location }}">
+            <div class="col-md-6 col-lg-4 futsal-card" data-name="{{ $futsal->futsal_name }}" data-price="{{ $futsal->hourly_price }}" data-location="{{ $futsal->futsal_location }}">
                 <div class="card shadow-sm">
                     <div class="futsal-image">
-                        <img src="{{ asset('images/'.$futsal->image) }}" alt="{{ $futsal->name }}" class="card-img-top rounded-top">
+                        <img src="{{ asset($futsal->futsal_image) }}" alt="Futsal Image" class="w-100 rounded-top">
                     </div>
                     <div class="card-body text-center">
-                        <h5 class="card-title mb-2">{{ $futsal->name }}</h5>
-                        <p class="text-muted"><i class="fas fa-map-marker-alt"></i> {{ $futsal->location }}</p>
-                        <p><strong>Price:</strong> ${{ $futsal->price }}</p>
-                        <p><strong>Number of Courts:</strong> {{ $futsal->num_of_courts }}</p>
+                        <h5 class="card-title mb-2">{{ $futsal->futsal_name}}</h5>
+                        <p class="text-muted"><i class="fas fa-map-marker-alt"></i> {{ $futsal->futsal_location }}</p>
+                        <p><strong>Price:</strong> ${{ $futsal->hourly_price }}</p>
+                        <p><strong>Number of Courts:</strong> {{ $futsal->num_court }}</p>
                         <p><strong>Opening Time:</strong> {{ $futsal->opening_time }}</p>
                         <p><strong>Closing Time:</strong> {{ $futsal->closing_time }}</p>
-                        <a href="{{ route('booking') }}" class="btn btn-primary">Book Now</a>
+                        <a href="{{ route('booking', $futsal->id) }}" class="btn btn-primary">Book Now</a>
                     </div>
                 </div>
             </div>

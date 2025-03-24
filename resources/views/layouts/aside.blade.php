@@ -1,24 +1,19 @@
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
+        <!-- Verification (only if vendor status is rejected or pending) -->
+        @if(Auth::check() && Auth::user()->vendor && in_array(Auth::user()->vendor->status, ['approved']))
+
         <!-- Dashboard -->
         <li class="nav-item">
-            <a class="nav-link" href="{{route('vendor.dashboard')}}">
+            <a class="nav-link" href="{{ route('vendor.dashboard') }}">
                 <i class="bi bi-house-door"></i>
                 <span>Dashboard</span>
             </a>
         </li>
 
-        <!-- Verification -->
-        <li class="nav-item">
-            <a class="nav-link" href="{{route('vendor.verification')}}">
-                <i class="bi bi-shield-lock"></i>
-                <span>Verification</span>
-            </a>
-        </li>
-
         <!-- Futsal Form -->
         <li class="nav-item">
-            <a class="nav-link" href="{{route('futsal.index')}}">
+            <a class="nav-link" href="{{ route('futsal.index') }}">
                 <i class="bi bi-pencil-square"></i>
                 <span>Futsal Form</span>
             </a>
@@ -26,23 +21,32 @@
 
         <!-- Bookings -->
         <li class="nav-item">
-            <a class="nav-link" href="{{route('vendor.bookings')}}">
+            <a class="nav-link" href="{{ route('vendor.bookings') }}">
                 <i class="bi bi-calendar-check"></i>
                 <span>Bookings</span>
             </a>
         </li>
+        @else
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('vendor.verification') }}">
+                <i class="bi bi-shield-lock"></i>
+                <span>Verification</span>
+            </a>
+        </li>
+        @endif
     </ul>
 </aside>
+
 
 <!-- Sidebar Toggle Button -->
 <button id="toggleSidebarBtn" class="toggle-btn">☰</button>
 
 <style>
     /* General Sidebar Styling */
-    (max-width: 1199px) {
-    .sidebar {
-     display:none;
-    }
+    @media (max-width: 1199px) {
+    .toggle-sidebar .sidebar {
+        left: 0;
+        display: none;
 }
     .sidebar {
         background-color: #f8f9fa;

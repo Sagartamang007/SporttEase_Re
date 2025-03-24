@@ -12,7 +12,6 @@
             <div class="container text-center">
                 <h1>Welcome to SportEase</h1>
                 <p>Your trusted solution for seamless Futsal bookings.</p>
-                {{-- <a href="{{Route('booking')}}" class=" nums">Book Now</a> --}}
             </div>
         </div>
     </section>
@@ -28,7 +27,7 @@
                         Browse through our futsal courts, check their locations and rates, and book instantly for an
                         exciting game!
                     </p>
-                    <a href="{{route('available.futsal')}}" class="btn  mt-3" style="color: #198754;">View Futsals</a>
+                    <a href="{{ route('available.futsal') }}" class="btn  mt-3" style="color: #198754;">View Futsals</a>
 
                 </div>
             </div>
@@ -39,43 +38,38 @@
                     @forelse($futsal as $data)
                         <!-- Futsal Card -->
                         <div class="swiper-slide">
-                            <div class="card futsal-card shadow-sm">
-                                <div class="futsal-image">
-                                    @if($data->futsal_images) <!-- Check if images are available -->
-                                        <img src="{{ Storage::url(json_decode($data->futsal_images)[0]) }}" alt="Futsal Image"
-                                            class="w-100 rounded-top"> <!-- Use the first image as the display -->
-                                    @else
-                                    <p>No Image</p>
-                                    @endif
-                                </div>
-                                <div class="card-body text-center">
-                                    <h4 class="futsal-title mb-3">{{ $data->futsal_name }}</h4> <!-- Futsal Name -->
-                                    <p class="futsal-description text-muted">{{ Str::limit($data->futsal_description, 100) }}</p> <!-- Description -->
-                                    <p class="text-muted"><i class="fas fa-map-marker-alt"></i> {{ $data->futsal_location }}</p> <!-- Location -->
-                                    <p><strong>Number of Courts:</strong> {{ $data->num_court }}</p> <!-- Number of Courts -->
-                                    <p><strong>Opening Time:</strong> {{ $data->opening_time }}</p> <!-- Opening Time -->
-                                    <p><strong>Closing Time:</strong> {{ $data->closing_time }}</p> <!-- Closing Time -->
+                            {{-- <a href="{{ route('futsal.details', $data->id) }}" class="futsal-link"> --}}
+                                <div class="card futsal-card shadow-sm">
+                                    <div class="futsal-image">
+                                        <img src="{{ asset($data->futsal_image) }}" alt="Futsal Image" class="futsal-img">
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <h4 class="futsal-title mb-3">{{ $data->futsal_name }}</h4> <!-- Futsal Name -->
+                                        <p class="futsal-description text-muted">
+                                            {{ Str::limit($data->futsal_description, 100) }}</p> <!-- Description -->
+                                        <p class="text-muted"><i class="fas fa-map-marker-alt"></i>
+                                            {{ $data->futsal_location }}</p> <!-- Location -->
+                                        <p><strong>Number of Courts:</strong> {{ $data->num_court }}</p>
+                                        <!-- Number of Courts -->
+                                        <p><strong>Opening Time:</strong> {{ $data->opening_time }}</p>
+                                        <!-- Opening Time -->
+                                        <p><strong>Closing Time:</strong> {{ $data->closing_time }}</p>
+                                        <!-- Closing Time -->
+                                        <p><strong>Hourly Price:</strong> ${{ number_format($data->hourly_price, 2) }}</p>
+                                        <!-- Hourly Price -->
 
-                                    <!-- Add Hourly Price -->
-                                    <p><strong>Hourly Price:</strong> ${{ number_format($data->hourly_price, 2) }}</p> <!-- Hourly Price -->
-
-                                    <a href="{{ route('booking')}}" class="btn btn-primary">Book Now</a>
+                                        <a href="{{ route('booking', $data->id) }}" class="book-now-btn">Book Now</a>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @empty
                         <p>No futsal courts available</p> <!-- Message when no futsal data is available -->
                     @endforelse
                 </div>
 
-                <!-- Optional Custom Navigation Arrows -->
-                <div class="custom-swiper-button-prev">
-                    <i class="fa-solid fa-arrow-left" style="color:rgb(0, 128, 0);"></i>
-                </div>
-                <div class="custom-swiper-button-next">
-                    <i class="fa-solid fa-arrow-right" style="color:rgb(0, 128, 0);"></i>
-                </div>
             </div>
+
 
 
 
@@ -154,16 +148,4 @@
             </div>
         </div>
     </section>
-
-    {{-- <!-- Call to Action Section -->
-    <section class="cta-section py-5 text-white" style="background-color:rgb(0, 128, 0);">
-        <div class="container text-center">
-            <h3 class="mb-3">Ready to Play?</h3>
-            <p>Don't wait! Book your futsal court now and enjoy an amazing game with your friends.</p>
-            <a href="{{Route('booking')}}" class="btn btn-light btn-lg">Book Now</a>
-        </div>
-    </section> --}}
-
-
-
 @endsection

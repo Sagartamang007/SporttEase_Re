@@ -10,92 +10,105 @@
         .con:hover {
             border: 1px solid #198754;
             color: #198754;
+            background: transparent;
+        }
+
+        .futsal-info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .futsal-img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .futsal-name {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .icon {
+            font-size: 1.3rem;
+            color: #198754;
         }
 
         .selected-time-section {
             display: flex;
             justify-content: center;
             gap: 20px;
+            flex-wrap: wrap;
+            text-align: center;
         }
 
         .selected-date, .selected-time {
-            font-size: 1.1rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* Responsive Styling */
+        @media (max-width: 992px) {
+            .futsal-info-card {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .selected-time-section {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 
     <div class="container-fluid">
-        <!-- Green Cover Section -->
-        <div class="cover-section">
-            <img src="{{ asset($futsal->cover_image) }}" alt="Cover Image" class="img-fluid w-100">
-        </div>
 
-        <!-- Rounded Image Section Below the Cover Image -->
-        <div class="rounded-image-section text-center mt-4">
-            <img src="{{ asset($futsal->image) }}" alt="Rounded Image" class="rounded-circle img-fluid" style="max-width: 200px;">
-        </div>
+        <!-- Futsal Information Section -->
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10 col-sm-12">
+                    <div class="futsal-info-card text-center">
+                        <div class="rounded-image-section mb-3">
+                            <img src="{{ asset($futsal->futsal_image) }}" alt="Futsal Image" class="futsal-img img-fluid">
+                        </div>
 
-        <!-- Description Section -->
-        <div class="description-section text-center mt-4">
-            <p>{{ $futsal->description }}</p>
+                        <h2 class="futsal-name">{{ $futsal->futsal_name }}</h2>
+
+                        <p class="mt-3"><i class="icon fas fa-map-marker-alt"></i> <strong>Location:</strong> {{ $futsal->futsal_location }}</p>
+                        <p><i class="icon fas fa-info-circle"></i> <strong>Description:</strong> {{ $futsal->futsal_description }}</p>
+                        <p><i class="icon fas fa-clock"></i> <strong>Opening Time:</strong> {{ $futsal->opening_time }}</p>
+                        <p><i class="icon fas fa-clock"></i> <strong>Closing Time:</strong> {{ $futsal->closing_time }}</p>
+                        <p><i class="icon fas fa-dollar-sign"></i> <strong>Price per Hour:</strong> ${{ number_format($futsal->hourly_price, 2) }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Booking Section -->
     <div class="container py-5">
         <h2 class="text-center mb-4" style="color: #198754;">Book Your Slot</h2>
         <form action="{{ route('bookings.store') }}" method="POST">
             @csrf
             <div class="row justify-content-center mb-4">
-                <div class="col-12 col-md-6 mb-3 mb-md-0">
-                    <label for="date-picker" style="font-weight: bold;">Select Date</label>
+                <div class="col-lg-6 col-md-8 col-sm-10 col-12">
+                    <label for="date-picker" class="fw-bold">Select Date</label>
                     <input type="text" id="date-picker" name="date" class="form-control" placeholder="Select Date" required />
                 </div>
             </div>
 
-            <!-- Combined Start Time and End Time Section -->
+            <!-- Time Selection -->
             <div class="row justify-content-center mb-4">
-                <div class="col-12 col-md-6 mb-3 mb-md-0">
-                    <div class="d-flex" style="justify-content: center;">
-                        <!-- Start Time -->
-                        <div class="me-2">
-                            <label for="start-time" style="font-weight: bold;">Select Start Time</label>
-
-                            <select id="start-hour" class="form-control mb-2">
-                                @for ($i = 1; $i <= 12; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
-                            </select>
-                            <select id="start-minute" class="form-control mb-2">
-                                <option value="00">00</option>
-                                <option value="15">15</option>
-                                <option value="30">30</option>
-                                <option value="45">45</option>
-                            </select>
-                            <select id="start-ampm" class="form-control">
-                                <option value="AM">AM</option>
-                                <option value="PM">PM</option>
-                            </select>
-                        </div>
-
-                        <!-- End Time -->
-                        <div>
-                            <label for="end-time" style="font-weight: bold;">Select End Time</label>
-                            <select id="end-hour" class="form-control mb-2">
-                                @for ($i = 1; $i <= 12; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
-                            </select>
-                            <select id="end-minute" class="form-control mb-2">
-                                <option value="00">00</option>
-                                <option value="15">15</option>
-                                <option value="30">30</option>
-                                <option value="45">45</option>
-                            </select>
-                            <select id="end-ampm" class="form-control">
-                                <option value="AM">AM</option>
-                                <option value="PM">PM</option>
-                            </select>
-                        </div>
-                    </div>
+                <div class="col-lg-6 col-md-8 col-sm-10 col-12">
+                    <label for="time-range" class="fw-bold">Select Time Range</label>
+                    <input type="text" id="time-range" name="time_range" class="form-control" placeholder="Select Time" required />
                 </div>
             </div>
 
@@ -107,88 +120,49 @@
                 </div>
                 <div class="selected-time">
                     <strong>Selected Time:</strong>
-                    <p id="selectedTime" class="fw-bold">Start Time: - | End Time: -</p>
+                    <p id="selectedTime" class="fw-bold">-</p>
                 </div>
             </div>
 
-            <!-- Hidden field for the logged-in user's name -->
             <input type="hidden" name="user_name" value="{{ Auth::user()->name }}" />
-            <!-- Hidden fields for start and end times -->
             <input type="hidden" id="start-time-input" name="start_time" />
             <input type="hidden" id="end-time-input" name="end_time" />
 
-            <div class="d-flex justify-content-center mt-3">
-                <button id="cancelButton" class="btn btn-secondary me-2">Cancel</button>
+            <div class="d-flex flex-column flex-md-row justify-content-center mt-3 gap-2">
+                <button id="cancelButton" type="reset" class="btn btn-secondary">Cancel</button>
                 <button type="submit" id="confirmButton" class="btn con">Confirm</button>
             </div>
         </form>
     </div>
 
     <script>
-        // Initialize flatpickr for date picker
         document.addEventListener('DOMContentLoaded', function () {
             flatpickr('#date-picker', {
-                dateFormat: 'Y-m-d', // Format: YYYY-MM-DD
-                minDate: 'today',    // Prevent selecting past dates
+                dateFormat: 'Y-m-d',
+                minDate: 'today',
+            });
+
+            flatpickr('#time-range', {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "h:i K",
             });
 
             const selectedDateElement = document.getElementById('selectedDate');
             const selectedTimeElement = document.getElementById('selectedTime');
-            const cancelButton = document.getElementById('cancelButton');
-            const startTimeInput = document.getElementById('start-time-input');
-            const endTimeInput = document.getElementById('end-time-input');
 
-            // Update selected date and time on change
             function updateSelectedDateTime() {
                 const selectedDate = document.getElementById('date-picker').value;
-                const startHour = document.getElementById('start-hour').value;
-                const startMinute = document.getElementById('start-minute').value;
-                const startAmpm = document.getElementById('start-ampm').value;
-                const endHour = document.getElementById('end-hour').value;
-                const endMinute = document.getElementById('end-minute').value;
-                const endAmpm = document.getElementById('end-ampm').value;
+                const selectedTime = document.getElementById('time-range').value;
 
-                // Ensure all fields are filled
-                if (!selectedDate || !startHour || !startMinute || !startAmpm || !endHour || !endMinute || !endAmpm) {
-                    return;
-                }
+                if (!selectedDate || !selectedTime) return;
 
-                // Format the time and update the display
-                const startTime = `${startHour}:${startMinute} ${startAmpm}`;
-                const endTime = `${endHour}:${endMinute} ${endAmpm}`;
-
-                // Update the elements for selected date and time
                 selectedDateElement.innerHTML = selectedDate;
-                selectedTimeElement.innerHTML = `Start Time: ${startTime} | End Time: ${endTime}`;
-
-                // Set the hidden input fields for start and end time
-                startTimeInput.value = startTime;
-                endTimeInput.value = endTime;
+                selectedTimeElement.innerHTML = selectedTime;
             }
 
-            // Event listeners for the time and date selections
             document.getElementById('date-picker').addEventListener('change', updateSelectedDateTime);
-            document.getElementById('start-hour').addEventListener('change', updateSelectedDateTime);
-            document.getElementById('start-minute').addEventListener('change', updateSelectedDateTime);
-            document.getElementById('start-ampm').addEventListener('change', updateSelectedDateTime);
-            document.getElementById('end-hour').addEventListener('change', updateSelectedDateTime);
-            document.getElementById('end-minute').addEventListener('change', updateSelectedDateTime);
-            document.getElementById('end-ampm').addEventListener('change', updateSelectedDateTime);
-
-            // Optional: Reset form on clicking cancel
-            cancelButton.addEventListener('click', function () {
-                document.getElementById('date-picker').value = '';
-                document.getElementById('start-hour').value = '';
-                document.getElementById('start-minute').value = '';
-                document.getElementById('start-ampm').value = '';
-                document.getElementById('end-hour').value = '';
-                document.getElementById('end-minute').value = '';
-                document.getElementById('end-ampm').value = '';
-                selectedDateElement.innerHTML = '-';
-                selectedTimeElement.innerHTML = 'Start Time: - | End Time: -';
-                startTimeInput.value = '';
-                endTimeInput.value = '';
-            });
+            document.getElementById('time-range').addEventListener('change', updateSelectedDateTime);
         });
     </script>
 @endsection

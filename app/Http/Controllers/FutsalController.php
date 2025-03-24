@@ -22,39 +22,38 @@ class FutsalController extends Controller
     }
 
     // Store a newly created resource in storage.
+
+
     public function store(Request $request)
-    {
-        $request->validate([
-            'futsal_name' => 'required',
-            'futsal_location' => 'required',
-            'futsal_description' => 'required',
-            'num_court' => 'required',
-            'opening_time' => 'required',
-            'closing_time' => 'required',
-            'hourly_price' => 'required|integer',
-            'futsal_images.*' => 'required|image',
-        ]);
+{
+    $request->validate([
+        'futsal_name' => 'required',
+        'futsal_location' => 'required',
+        'futsal_description' => 'required',
+        'num_court' => 'required',
+        'opening_time' => 'required',
+        'closing_time' => 'required',
+        'hourly_price' => 'required|integer',
+        'futsal_image' => 'required|image',
+    ]);
 
-        $data = $request->all();
+    $data = $request->all();
 
-        // Handle multiple image upload with custom storage path
-        $imagePaths = [];
-        if ($request->hasFile('futsal_images')) {
-            foreach ($request->file('futsal_images') as $image) {
-                // Ensure the file is moved to the correct directory after upload
-                $imagePath = $image->store('futsal_images', 'public');  // 'public' uses 'storage/app/public'
-                $imagePaths[] = $imagePath;
-            }
-        }
-
-        // Store the images paths as a JSON array in the database
-        $data['futsal_images'] = json_encode($imagePaths);
-        $data['user_id'] = auth()->id();
-
-        futsal_court::create($data);
-
-        return redirect()->route('futsal.index');
+    // Handle single image upload and save publicly
+    if ($request->hasFile('futsal_image')) {
+        $filename = time() . '_' . $request->file('futsal_image')->getClientOriginalName();
+        $imagePath = $request->file('futsal_image')->storeAs('futsal_images', $filename, 'public');
+        $data['futsal_image'] = 'storage/futsal_images/' . $filename; // Publicly accessible path
     }
+
+    $data['user_id'] = auth()->id();
+
+    futsal_court::create($data);
+
+    return redirect()->route('futsal.index')->with('success', 'Futsal court created successfully!');
+}
+
+
 
 
     // Display the specified resource.
@@ -70,6 +69,8 @@ class FutsalController extends Controller
         return view('Vendor.Futsals.edit', compact('futsalCourt'));  // Pass the futsal court to the edit view
     }
 
+
+
     public function update(Request $request, futsal_court $futsalCourt)
     {
         $request->validate([
@@ -80,37 +81,30 @@ class FutsalController extends Controller
             'opening_time' => 'required',
             'closing_time' => 'required',
             'hourly_price' => 'required|integer',
-            'futsal_images.*' => 'required|image', // Make images required
+            'futsal_image' => 'nullable|image', // Image is optional
         ]);
 
-        $data = $request->all();
+        $data = $request->except('futsal_image'); // Get all fields except the image
 
-        // Handle multiple image upload with custom storage path
-        if ($request->hasFile('futsal_images')) {
-            // Delete old images from custom path
-            $oldImages = json_decode($futsalCourt->futsal_images, true);
-            if ($oldImages) {
-                foreach ($oldImages as $oldImage) {
-                    // Check if file exists before attempting to delete it
-                    if (Storage::exists('public/' . $oldImage)) {
-                        Storage::delete('public/' . $oldImage);
-                    }
-                }
+        // Handle image upload and replacement
+        if ($request->hasFile('futsal_image')) {
+            // Delete old image
+            if ($futsalCourt->futsal_image && Storage::exists(str_replace('storage/', 'public/', $futsalCourt->futsal_image))) {
+                Storage::delete(str_replace('storage/', 'public/', $futsalCourt->futsal_image));
             }
 
-            // Upload new images
-            $imagePaths = [];
-            foreach ($request->file('futsal_images') as $image) {
-                // Store the new image in the 'futsal_images' directory under 'public'
-                $imagePaths[] = $image->store('futsal_images', 'public');
-            }
+            // Upload new image
+            $filename = time() . '_' . $request->file('futsal_image')->getClientOriginalName();
+            $imagePath = $request->file('futsal_image')->storeAs('public/futsal_images', $filename);
 
-            $data['futsal_images'] = json_encode($imagePaths);  // Store new image paths
+            // Store new image path
+            $data['futsal_image'] = 'storage/futsal_images/' . $filename; // Publicly accessible path
         }
 
-        $futsalCourt->update($data);  // Update the futsal court
+        // Update the futsal court details
+        $futsalCourt->update($data);
 
-        return redirect()->route('futsal.index');  // Redirect to the index page
+        return redirect()->route('futsal.index')->with('success', 'Futsal court updated successfully!');
     }
 
 

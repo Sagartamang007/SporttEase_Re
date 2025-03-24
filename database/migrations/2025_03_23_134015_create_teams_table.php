@@ -11,18 +11,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('testimonials', function (Blueprint $table) {
+        Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->text('content');
-            $table->string('author_name');
-            $table->integer('user_id');  // Assuming testimonials are associated with users
+            $table->string('name');
+            $table->string('designation');
+            $table->string('image'); // Image URL
             $table->timestamps();
         });
     }
 
-    public function down()
-    {
-        Schema::dropIfExists('testimonials');
-    }
 
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('teams');
+    }
 };

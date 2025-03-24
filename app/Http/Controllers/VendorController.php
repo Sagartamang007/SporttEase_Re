@@ -5,18 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class VendorController extends Controller
 {
     // Show the vendor form
     public function showForm()
     {
-        return view('vendor.verification');
+        $vendor = Vendor::where('user_id', Auth::id())->first();
+$user_name = Auth::user()->name;
+
+        return view('vendor.verification', ['vendor' => $vendor,'user_name' => $user_name]);
     }
 
+
     // Handle form submission
-    public function submitForm(Request $request)
-    {
+    public function submitForm(Request $request) {
+
         // Validate the form inputs
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -26,24 +31,30 @@ class VendorController extends Controller
             'pan_card_image' => 'required|file|mimes:jpg,png,jpeg|max:2048',
             'front_citizenship_document' => 'required|file|mimes:jpg,png,jpeg|max:2048',
             'back_citizenship_document' => 'required|file|mimes:jpg,png,jpeg|max:2048',
+
         ]);
 
-        // Handle file uploads and store only the image name
-        $documentPath = $request->file('document')->storeAs('', $request->file('document')->getClientOriginalName());
-        $panCardImagePath = $request->file('pan_card_image')->storeAs('', $request->file('pan_card_image')->getClientOriginalName());
-        $frontCitizenshipPath = $request->file('front_citizenship_document')->storeAs('', $request->file('front_citizenship_document')->getClientOriginalName());
-        $backCitizenshipPath = $request->file('back_citizenship_document')->storeAs('', $request->file('back_citizenship_document')->getClientOriginalName());
+        // Get the logged-in user's ID
+        $userId = auth()->id();
+        $storagePath = "uploads/{$userId}"; // Folder named after the user ID
+
+        // Handle file uploads and store inside the user-specific folder
+        $documentPath = $request->file('document')->storeAs($storagePath, $request->file('document')->getClientOriginalName(), 'public');
+        $panCardImagePath = $request->file('pan_card_image')->storeAs($storagePath, $request->file('pan_card_image')->getClientOriginalName(), 'public');
+        $frontCitizenshipPath = $request->file('front_citizenship_document')->storeAs($storagePath, $request->file('front_citizenship_document')->getClientOriginalName(), 'public');
+        $backCitizenshipPath = $request->file('back_citizenship_document')->storeAs($storagePath, $request->file('back_citizenship_document')->getClientOriginalName(), 'public');
 
         // Create Vendor record
         Vendor::create([
             'name' => $validatedData['name'],
             'company_name' => $validatedData['company_name'],
-            'document' => $documentPath, // Store the file name only
+            'document' => $documentPath, // Store the file path
             'pan_card' => $validatedData['pan_card'],
-            'pan_card_image' => $panCardImagePath, // Store the file name only
-            'front_citizenship_document' => $frontCitizenshipPath, // Store the file name only
-            'back_citizenship_document' => $backCitizenshipPath, // Store the file name only
+            'pan_card_image' => $panCardImagePath, // Store the file path
+            'front_citizenship_document' => $frontCitizenshipPath, // Store the file path
+            'back_citizenship_document' => $backCitizenshipPath, // Store the file path
             'status' => 'pending', // Default status
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->back()->with('success', 'Form submitted successfully! Awaiting approval.');
