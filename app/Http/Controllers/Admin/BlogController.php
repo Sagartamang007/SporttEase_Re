@@ -37,7 +37,7 @@ class BlogController extends Controller
         // Create new blog post
         Blog::create($validated);
 
-        return redirect()->route('admin.blogs')->with('success', 'Blog created successfully!');
+        return redirect()->route('blogs.index')->with('success', 'Blog created successfully!');
     }
 
     public function edit($id)
@@ -72,7 +72,7 @@ class BlogController extends Controller
 
         $blog->save();
 
-        return redirect()->route('admin.blogs')->with('success', 'Blog updated successfully');
+        return redirect()->route('blogs.index')->with('success', 'Blog updated successfully');
     }
 
     public function destroy($id)
@@ -88,7 +88,7 @@ class BlogController extends Controller
         // Delete the blog post
         $blog->delete();
 
-        return redirect()->route('admin.blogs')->with('success', 'Blog deleted successfully!');
+        return redirect()->route('blogs.index')->with('success', 'Blog deleted successfully!');
     }
 
 }

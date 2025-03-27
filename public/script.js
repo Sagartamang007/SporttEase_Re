@@ -25,33 +25,17 @@
     });
   });
 
-// //   booking slot script
-//       document.addEventListener('DOMContentLoaded', function () {
-//           // Get all time slot buttons except the booked ones
-//           const slots = document.querySelectorAll('.slot:not(.booked)');
-//           let selectedSlot = '';
+//Auto slider js for home testimonials
+    document.addEventListener('DOMContentLoaded', function() {
+        // This will ensure that after all items slide, it loops infinitely
+        const slider = document.querySelector('.testimonial-slider');
 
-//           // Add click event listener to each available slot
-//           slots.forEach(slot => {
-//               slot.addEventListener('click', function () {
-//                   selectedSlot = this.getAttribute('data-time'); // Get slot time
-//                   document.getElementById('selectedSlot').textContent = selectedSlot; // Show slot in modal
-
-//                   // Initialize and show the modal
-//                   const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
-//                   bookingModal.show();
-//               });
-//           });
-
-//           // Handle booking confirmation
-//           document.getElementById('confirmBooking').addEventListener('click', function () {
-//               alert(`Slot "${selectedSlot}" has been booked successfully!`);
-//               // Optionally, send a backend call here to save the booking
-//           });
-//       });
-
-
-
+        slider.addEventListener('animationiteration', () => {
+            slider.style.animation = 'none'; // Disable the animation
+            slider.offsetHeight; // Trigger a reflow
+            slider.style.animation = ''; // Re-enable the animation to restart it
+        });
+    });
 
 document.addEventListener('DOMContentLoaded', function () {
     // Helper function to update the displayed selected date and time

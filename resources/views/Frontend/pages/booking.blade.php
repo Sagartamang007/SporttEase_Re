@@ -92,23 +92,30 @@
         </div>
     </div>
 
-    <!-- Booking Section -->
+
     <div class="container py-5">
         <h2 class="text-center mb-4" style="color: #198754;">Book Your Slot</h2>
         <form action="{{ route('bookings.store') }}" method="POST">
             @csrf
+
             <div class="row justify-content-center mb-4">
                 <div class="col-lg-6 col-md-8 col-sm-10 col-12">
-                    <label for="date-picker" class="fw-bold">Select Date</label>
-                    <input type="text" id="date-picker" name="date" class="form-control" placeholder="Select Date" required />
+                    <div id="calendar-container"></div>
                 </div>
             </div>
 
             <!-- Time Selection -->
             <div class="row justify-content-center mb-4">
                 <div class="col-lg-6 col-md-8 col-sm-10 col-12">
-                    <label for="time-range" class="fw-bold">Select Time Range</label>
-                    <input type="text" id="time-range" name="time_range" class="form-control" placeholder="Select Time" required />
+                    <label for="start-time-range" class="fw-bold">Select Start Time</label>
+                    <input type="time" id="start-time-range" name="start_time" class="form-control" placeholder="Select Start Time" required />
+                </div>
+            </div>
+
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-6 col-md-8 col-sm-10 col-12">
+                    <label for="end-time-range" class="fw-bold">Select End Time</label>
+                    <input type="time" id="end-time-range" name="end_time" class="form-control" placeholder="Select End Time" required />
                 </div>
             </div>
 
@@ -119,8 +126,12 @@
                     <p id="selectedDate" class="fw-bold">-</p>
                 </div>
                 <div class="selected-time">
-                    <strong>Selected Time:</strong>
-                    <p id="selectedTime" class="fw-bold">-</p>
+                    <strong>Selected Start Time:</strong>
+                    <p id="selectedStartTime" class="fw-bold">-</p>
+                </div>
+                <div class="selected-time">
+                    <strong>Selected End Time:</strong>
+                    <p id="selectedEndTime" class="fw-bold">-</p>
                 </div>
             </div>
 
@@ -135,34 +146,48 @@
         </form>
     </div>
 
+    <style>
+        /* Ensure the flatpickr calendar is visible */
+        .flatpickr-calendar.open {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    </style>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            flatpickr('#date-picker', {
-                dateFormat: 'Y-m-d',
-                minDate: 'today',
+        document.addEventListener("DOMContentLoaded", function () {
+            const dateInput = document.getElementById("date-picker");
+            const selectedDateText = document.getElementById("selectedDate");
+            const selectedStartTimeText = document.getElementById("selectedStartTime");
+            const selectedEndTimeText = document.getElementById("selectedEndTime");
+            const startTimeInput = document.getElementById("start-time-range");
+            const endTimeInput = document.getElementById("end-time-range");
+
+            // Initialize flatpickr for the calendar
+            const calendar = flatpickr("#calendar-container", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                inline: true,  // Always visible calendar
+                static: true,  // Prevents repositioning
+                onChange: function(selectedDates, dateStr) {
+                    selectedDateText.textContent = dateStr;  // Display selected date
+                }
             });
 
-            flatpickr('#time-range', {
-                enableTime: true,
-                noCalendar: true,
-                dateFormat: "h:i K",
+            // Update selected times when start or end time is changed
+            startTimeInput.addEventListener('input', function () {
+                selectedStartTimeText.textContent = startTimeInput.value;  // Display selected start time
             });
 
-            const selectedDateElement = document.getElementById('selectedDate');
-            const selectedTimeElement = document.getElementById('selectedTime');
+            endTimeInput.addEventListener('input', function () {
+                selectedEndTimeText.textContent = endTimeInput.value;  // Display selected end time
+            });
 
-            function updateSelectedDateTime() {
-                const selectedDate = document.getElementById('date-picker').value;
-                const selectedTime = document.getElementById('time-range').value;
-
-                if (!selectedDate || !selectedTime) return;
-
-                selectedDateElement.innerHTML = selectedDate;
-                selectedTimeElement.innerHTML = selectedTime;
-            }
-
-            document.getElementById('date-picker').addEventListener('change', updateSelectedDateTime);
-            document.getElementById('time-range').addEventListener('change', updateSelectedDateTime);
+            // Ensure the calendar stays open
+            document.querySelector('.flatpickr-calendar').classList.add('open', 'arrowTop');
         });
     </script>
+
+
 @endsection

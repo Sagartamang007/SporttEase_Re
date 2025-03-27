@@ -176,6 +176,7 @@
             position: relative;
             padding: 12px;
             text-align: right;
+            padding-top: 2.5rem;
         }
 
         td:before {

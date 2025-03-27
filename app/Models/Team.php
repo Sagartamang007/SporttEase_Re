@@ -9,5 +9,5 @@ class Team extends Model
     use HasFactory;
 
 
-    protected $fillable = ['name', 'role', 'image']; // ✅ Make sure these are fillable
+    protected $fillable = ['name', 'designation', 'image']; // ✅ Make sure these are fillable
 }

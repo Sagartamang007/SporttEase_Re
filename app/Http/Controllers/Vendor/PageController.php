@@ -3,11 +3,26 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Booking;
+use Carbon\Carbon; // Don't forget to import Carbon if you're using it
+
 
 class PageController extends Controller
 {
     public function dashboard(){
-        return view('Vendor.dashboard');
+        $totalBookings = Booking::count();
+        $todayBookings = Booking::whereDate('created_at', Carbon::today())->count();
+        $thisMonthBookings = Booking::whereMonth('created_at', Carbon::now()->month)->count();
+        // $canceledBookings = Booking::where('status', 'canceled')->count();
+        // $upcomingBookings = Booking::where('status', 'pending')->orderBy('date', 'asc')->take(5)->get();
+
+        return view('vendor.dashboard', compact(
+            'totalBookings',
+            'todayBookings',
+            'thisMonthBookings',
+            // 'canceledBookings',
+            // 'upcomingBookings'
+        ));
     }
 
     public function futsalform(){

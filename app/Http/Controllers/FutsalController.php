@@ -61,6 +61,8 @@ class FutsalController extends Controller
     {
         $futsalCourt->futsal_images = json_decode($futsalCourt->futsal_images);  // Decode images from JSON
         return view('Vendor.Futsals.show', compact('futsalCourt'));
+
+
     }
 
     // Show the form for editing the specified resource.

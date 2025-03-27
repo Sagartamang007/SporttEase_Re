@@ -18,8 +18,13 @@ class PageController extends Controller
         $blog = Blog::findOrFail($id);
         $relatedBlogs = Blog::where('id', '!=', $id)->latest()->limit(5)->get();
         return view('Frontend.pages.show-blogs', compact('blog','relatedBlogs'));
-    }
 
+    }
+    public function showFutsal($id)
+    {
+        $futsal = futsal_court::findOrFail($id);
+        return view('Frontend.pages.futsal-details', compact('futsal'));
+    }
 
 
     // Home page with futsal courts

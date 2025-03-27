@@ -55,7 +55,7 @@
                     </div>
                     <div class="relative">
                         <x-text-input id="password" class="block mt-1 w-full pr-10 pl-4" type="password" name="password" required autocomplete="new-password" />
-                        <button type="button" class="absolute transform -translate-y-1/2 text-gray-500" id="togglePassword" onclick="togglePasswordVisibility('password')" style="top: 9px;right:20px">
+                        <button type="button" class="absolute transform -translate-y-1/2 text-gray-500" id="togglePassword" onclick="togglePasswordVisibility('password')" style="top: 24px;right:20px">
                             <i class="fas fa-eye" id="eyeIcon"></i>
                         </button>
                     </div>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="relative">
                         <x-text-input id="password_confirmation" class="block mt-1 w-full pr-10 pl-4" type="password" name="password_confirmation" required autocomplete="new-password" />
-                        <button type="button" class="absolute transform -translate-y-1/2 text-gray-500" id="toggleConfirmPassword" onclick="togglePasswordVisibility('password_confirmation')" style="top: 10px; right:20px">
+                        <button type="button" class="absolute transform -translate-y-1/2 text-gray-500" id="toggleConfirmPassword" onclick="togglePasswordVisibility('password_confirmation')" style="top: 24px; right:20px">
                             <i class="fas fa-eye" id="confirmEyeIcon"></i>
                         </button>
                     </div>
