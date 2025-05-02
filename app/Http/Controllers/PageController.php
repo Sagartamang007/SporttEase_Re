@@ -8,6 +8,8 @@ use App\Models\Testimonial;
 use App\Models\Blog;
 use App\Models\ContactUs;
 use App\Models\Team;
+use App\Models\User;
+use App\Models\Booking;
 
 
 class PageController extends Controller
@@ -30,6 +32,8 @@ class PageController extends Controller
     // Home page with futsal courts
     public function home()
     {
+
+
         // Fetch futsal courts data
         $futsal = futsal_court::get();
 
@@ -47,17 +51,26 @@ class PageController extends Controller
     // Booking page for a specific futsal court
     public function booking($id)
     {
-        // Find the futsal court by its ID
         $futsal = futsal_court::find($id);
 
-        // If the futsal court is not found, redirect to the futsals page with an error message
         if (!$futsal) {
             return redirect()->route('futsals')->with('error', 'Futsal Court not found');
         }
 
-        // Return the booking page view, passing the futsal court data
-        return view('frontend.pages.booking', compact('futsal'));
+        $bookings = Booking::where('futsal_court_id', $id)
+            ->get()
+            ->map(function ($booking) {
+                return [
+                    'date' => $booking->date,
+                    'start_time' => \Carbon\Carbon::parse($booking->start_time)->format('H:i'),
+                    'end_time' => \Carbon\Carbon::parse($booking->end_time)->format('H:i'),
+                ];
+            });
+
+        return view('frontend.pages.booking', compact('futsal', 'bookings'));
     }
+
+
 
     // Contact Us page
     public function contactus()

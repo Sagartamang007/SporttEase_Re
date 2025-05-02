@@ -8,12 +8,26 @@ use Illuminate\Support\Facades\Storage;
 
 class FutsalController extends Controller
 {
-    // Display a listing of the resource.
-    public function index()
-    {
-        $futsalCourts = futsal_court::all();  // Retrieve all futsal courts
-        return view('Vendor.Futsals.index', compact('futsalCourts'));
-    }
+    // // Display a listing of the resource.
+    // public function index()
+    // {
+    //     // $futsalCourts = futsal_court::all();  // Retrieve all futsal courts
+    //     $userId = auth()->id(); // Get the currently logged-in user's ID
+    //     $futsalCourts = futsal_court::where('user_id', $userId)->get();
+    //     return view('Vendor.Futsals.index', compact('futsal_court'));
+    // }
+// Display a listing of the resource.
+public function index()
+{
+    // Get the currently logged-in user's ID
+    $userId = auth()->id();
+
+    // Retrieve futsal courts for the currently logged-in vendor
+    $futsalCourts = futsal_court::where('user_id', $userId)->get();
+
+    // Pass the variable to the view
+    return view('Vendor.Futsals.index', compact('futsalCourts'));
+}
 
     // Show the form for creating a new resource.
     public function create()
@@ -35,6 +49,8 @@ class FutsalController extends Controller
         'closing_time' => 'required',
         'hourly_price' => 'required|integer',
         'futsal_image' => 'required|image',
+        'latitude'=> 'required',
+        'longitude'=> 'required',
     ]);
 
     $data = $request->all();
@@ -84,6 +100,8 @@ class FutsalController extends Controller
             'closing_time' => 'required',
             'hourly_price' => 'required|integer',
             'futsal_image' => 'nullable|image', // Image is optional
+            'latitude'=> 'required',
+            'longitude'=> 'required',
         ]);
 
         $data = $request->except('futsal_image'); // Get all fields except the image
@@ -91,16 +109,19 @@ class FutsalController extends Controller
         // Handle image upload and replacement
         if ($request->hasFile('futsal_image')) {
             // Delete old image
-            if ($futsalCourt->futsal_image && Storage::exists(str_replace('storage/', 'public/', $futsalCourt->futsal_image))) {
-                Storage::delete(str_replace('storage/', 'public/', $futsalCourt->futsal_image));
+            if ($futsalCourt->futsal_image) {
+                $oldImagePath = str_replace('storage/', 'public/', $futsalCourt->futsal_image);
+                if (Storage::exists($oldImagePath)) {
+                    Storage::delete($oldImagePath);
+                }
             }
 
             // Upload new image
             $filename = time() . '_' . $request->file('futsal_image')->getClientOriginalName();
-            $imagePath = $request->file('futsal_image')->storeAs('public/futsal_images', $filename);
+            $imagePath = $request->file('futsal_image')->storeAs('futsal_images', $filename, 'public');
 
             // Store new image path
-            $data['futsal_image'] = 'storage/futsal_images/' . $filename; // Publicly accessible path
+            $data['futsal_image'] = 'storage/futsal_images/' . $filename;
         }
 
         // Update the futsal court details
@@ -108,6 +129,7 @@ class FutsalController extends Controller
 
         return redirect()->route('futsal.index')->with('success', 'Futsal court updated successfully!');
     }
+
 
 
     // Remove the specified resource from storage.

@@ -10,8 +10,28 @@
                                 <span class="fw-bold">Vendor Verification</span>
                             </h5>
                         </div>
+                        <!-- Success Message -->
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
+
+                        <!-- Error Message -->
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
                         <div class="card-body">
-                            <form action="{{ route('vendor.verification') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('vendor.verification') }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <!-- Vendor Basic Details -->
                                 <div class="mb-4">
@@ -23,14 +43,18 @@
                                             <label for="name" class="form-label d-flex align-items-center">
                                                 <i class="bi bi-person me-2 text-primary"></i>Owner's Full Name
                                             </label>
-                                            <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="Enter your full name" value="{{ old('name', $vendor->name ?? $user_name) }}" required>
+                                            <input type="text" class="form-control form-control-lg" id="name"
+                                                name="name" placeholder="Enter your full name"
+                                                value="{{ old('name', $vendor->name ?? $user_name) }}" required>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="company_name" class="form-label d-flex align-items-center">
                                                 <i class="bi bi-building me-2 text-primary"></i>Company Name
                                             </label>
-                                            <input type="text" class="form-control form-control-lg" id="company_name" name="company_name" placeholder="Enter your company name" value="{{ old('company_name', $vendor->company_name ?? '') }}" required>
+                                            <input type="text" class="form-control form-control-lg" id="company_name"
+                                                name="company_name" placeholder="Enter your company name"
+                                                value="{{ old('company_name', $vendor->company_name ?? '') }}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -43,7 +67,8 @@
 
                                     <div class="mb-4">
                                         <label for="document" class="form-label d-flex align-items-center">
-                                            <i class="bi bi-file-earmark-pdf me-2 text-primary"></i>Registration Document
+                                            <i class="bi bi-file-earmark-pdf me-2 text-primary"></i>Registration
+                                            Document
                                         </label>
                                         <div class="input-group input-group-lg">
                                             <span class="input-group-text bg-light">
@@ -51,7 +76,8 @@
                                             </span>
                                             <input type="file" class="form-control" id="document" name="document">
                                         </div>
-                                        <div class="form-text mt-2">Upload your business registration certificate (PDF or image format)</div>
+                                        <div class="form-text mt-2">Upload your business registration certificate (PDF
+                                            or image format)</div>
                                     </div>
 
                                     <div class="row g-3">
@@ -59,7 +85,9 @@
                                             <label class="form-label d-flex align-items-center">
                                                 <i class="bi bi-credit-card me-2 text-primary"></i>PAN Card Number
                                             </label>
-                                            <input type="text" class="form-control form-control-lg" name="pan_card" placeholder="Enter PAN card number" value="{{ old('pan_card', $vendor->pan_card ?? '') }}" required>
+                                            <input type="text" class="form-control form-control-lg" name="pan_card"
+                                                placeholder="Enter PAN card number"
+                                                value="{{ old('pan_card', $vendor->pan_card ?? '') }}" required>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -83,26 +111,30 @@
                                     </h6>
                                     <div class="row g-3">
                                         <div class="col-md-6 mb-3">
-                                            <label for="front_citizenship_document" class="form-label d-flex align-items-center">
+                                            <label for="front_citizenship_document"
+                                                class="form-label d-flex align-items-center">
                                                 <i class="bi bi-card-image me-2 text-primary"></i>Front Side
                                             </label>
                                             <div class="input-group input-group-lg">
                                                 <span class="input-group-text bg-light">
                                                     <i class="bi bi-upload"></i>
                                                 </span>
-                                                <input type="file" class="form-control" name="front_citizenship_document">
+                                                <input type="file" class="form-control"
+                                                    name="front_citizenship_document">
                                             </div>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="back_citizenship_document" class="form-label d-flex align-items-center">
+                                            <label for="back_citizenship_document"
+                                                class="form-label d-flex align-items-center">
                                                 <i class="bi bi-card-image me-2 text-primary"></i>Back Side
                                             </label>
                                             <div class="input-group input-group-lg">
                                                 <span class="input-group-text bg-light">
                                                     <i class="bi bi-upload"></i>
                                                 </span>
-                                                <input type="file" class="form-control" name="back_citizenship_document">
+                                                <input type="file" class="form-control"
+                                                    name="back_citizenship_document">
                                             </div>
                                         </div>
                                     </div>
@@ -113,14 +145,18 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="terms" required>
                                         <label class="form-check-label" for="terms">
-                                            I confirm that all information provided is accurate and I agree to the <a href="#" class="text-decoration-none fw-bold">Terms and Conditions</a>
+                                            I confirm that all information provided is accurate and I agree to the <a
+                                                href="#" class="text-decoration-none fw-bold">Terms and
+                                                Conditions</a>
                                         </label>
                                     </div>
                                 </div>
 
                                 <!-- Submit Button -->
                                 <div class="d-grid gap-2 mt-4">
-                                    <button type="submit" class="btn btn-lg py-3 d-flex align-items-center justify-content-center" style="background-color:#198754;color:white">
+                                    <button type="submit"
+                                        class="btn btn-lg py-3 d-flex align-items-center justify-content-center"
+                                        style="background-color:#198754;color:white">
                                         <i class="bi bi-check-circle me-2"></i>Submit for Verification
                                     </button>
                                 </div>
@@ -264,7 +300,8 @@
                 padding: 1.25rem;
             }
 
-            .form-control, .input-group-text {
+            .form-control,
+            .input-group-text {
                 font-size: 0.95rem;
             }
 
@@ -282,7 +319,8 @@
                 padding: 1rem;
             }
 
-            .form-control, .input-group-text {
+            .form-control,
+            .input-group-text {
                 font-size: 0.9rem;
                 padding: 0.5rem 0.75rem;
             }

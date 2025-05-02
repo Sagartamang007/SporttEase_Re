@@ -69,7 +69,7 @@
                                     @endif
                                     <div class="position-absolute top-0 end-0 m-2">
                                         <span class="badge bg-success rounded-pill px-3 py-2">
-                                            ${{ $court->hourly_price }}/hr
+                                            NRs.{{ $court->hourly_price }}/hr
                                         </span>
                                     </div>
                                 </div>
@@ -100,10 +100,12 @@
                                                 <i class="bi bi-pencil me-1"></i>Edit
                                             </a>
                                             <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
-                                                    data-id="{{ $court->id }}"
-                                                    data-name="{{ $court->futsal_name }}">
-                                                <i class="bi bi-trash me-1"></i>Delete
-                                            </button>
+                                            data-id="{{ $court->id }}"
+                                            data-name="{{ $court->futsal_name }}"
+                                            data-url="{{ route('futsal.destroy', $court->id) }}">
+                                        <i class="bi bi-trash me-1"></i>Delete
+                                    </button>
+
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +166,7 @@
                                             </td>
                                             <td>
                                                 <span class="badge bg-success rounded-pill">
-                                                    ${{ $court->hourly_price }}
+                                                    Nrs.{{ $court->hourly_price }}
                                                 </span>
                                             </td>
                                             <td>
@@ -220,7 +222,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <form id="deleteForm" action="" method="POST">
+                        <!-- Changed this line to use a placeholder action that will be set by JavaScript -->
+                        <form id="deleteForm" method="POST" >
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete Court</button>
@@ -341,66 +344,69 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Toggle between card and list view
-        const cardViewBtn = document.getElementById('cardViewBtn');
-        const listViewBtn = document.getElementById('listViewBtn');
-        const cardView = document.getElementById('cardView');
-        const listView = document.getElementById('listView');
+    // Toggle between card and list view
+    const cardViewBtn = document.getElementById('cardViewBtn');
+    const listViewBtn = document.getElementById('listViewBtn');
+    const cardView = document.getElementById('cardView');
+    const listView = document.getElementById('listView');
 
-        cardViewBtn.addEventListener('click', function() {
-            cardView.style.display = 'flex';
-            listView.style.display = 'none';
-            cardViewBtn.classList.add('active');
-            listViewBtn.classList.remove('active');
+    cardViewBtn.addEventListener('click', function() {
+        cardView.style.display = 'flex';
+        listView.style.display = 'none';
+        cardViewBtn.classList.add('active');
+        listViewBtn.classList.remove('active');
+    });
+
+    listViewBtn.addEventListener('click', function() {
+        cardView.style.display = 'none';
+        listView.style.display = 'block';
+        listViewBtn.classList.add('active');
+        cardViewBtn.classList.remove('active');
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const courtItems = document.querySelectorAll('.court-item');
+    const courtCount = document.getElementById('courtCount');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        let visibleCount = 0;
+
+        courtItems.forEach(item => {
+            const courtName = item.querySelector('.card-title, .fw-medium').textContent.toLowerCase();
+            const courtLocation = item.querySelector('.text-muted, td:nth-child(2)').textContent.toLowerCase();
+
+            if (courtName.includes(searchTerm) || courtLocation.includes(searchTerm)) {
+                item.style.display = '';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
         });
 
-        listViewBtn.addEventListener('click', function() {
-            cardView.style.display = 'none';
-            listView.style.display = 'block';
-            listViewBtn.classList.add('active');
-            cardViewBtn.classList.remove('active');
-        });
+        courtCount.textContent = visibleCount;
+    });
 
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        const courtItems = document.querySelectorAll('.court-item');
-        const courtCount = document.getElementById('courtCount');
+    // Delete confirmation modal
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    const deleteForm = document.getElementById('deleteForm');
+    const courtNameElement = document.getElementById('courtName');
 
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            let visibleCount = 0;
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const courtId = this.getAttribute('data-id');
+            const courtName = this.getAttribute('data-name');
+            const deleteUrl = this.getAttribute('data-url');  // Get the full URL from the data-url attribute
 
-            courtItems.forEach(item => {
-                const courtName = item.querySelector('.card-title, .fw-medium').textContent.toLowerCase();
-                const courtLocation = item.querySelector('.text-muted, td:nth-child(2)').textContent.toLowerCase();
-
-                if (courtName.includes(searchTerm) || courtLocation.includes(searchTerm)) {
-                    item.style.display = '';
-                    visibleCount++;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-
-            courtCount.textContent = visibleCount;
-        });
-
-        // Delete confirmation modal
-        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        const deleteButtons = document.querySelectorAll('.delete-btn');
-        const deleteForm = document.getElementById('deleteForm');
-        const courtNameElement = document.getElementById('courtName');
-
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const courtId = this.getAttribute('data-id');
-                const courtName = this.getAttribute('data-name');
-
-                deleteForm.action = `/futsal/${courtId}`;
-                courtNameElement.textContent = courtName;
-                deleteModal.show();
-            });
+            // Update the delete form action dynamically
+            deleteForm.action = deleteUrl;
+            courtNameElement.textContent = courtName;
+            deleteModal.show();
         });
     });
+});
+
     </script>
 </x-app-layout>

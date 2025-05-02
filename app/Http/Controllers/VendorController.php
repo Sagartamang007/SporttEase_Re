@@ -78,4 +78,5 @@ $user_name = Auth::user()->name;
 
         return back()->with('error', 'Vendor rejected.');
     }
+
 }

@@ -54,7 +54,7 @@
                                         <!-- Opening Time -->
                                         <p><strong>Closing Time:</strong> {{ $data->closing_time }}</p>
                                         <!-- Closing Time -->
-                                        <p><strong>Hourly Price:</strong> ${{ number_format($data->hourly_price, 2) }}</p>
+                                        <p><strong>Hourly Price:</strong> NRs.{{ number_format($data->hourly_price, 2) }}</p>
                                         <!-- Hourly Price -->
 
                                         <a href="{{ route('booking', $data->id) }}" class="book-now-btn">Book Now</a>

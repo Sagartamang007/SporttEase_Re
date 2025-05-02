@@ -6,21 +6,28 @@
 </div>
 
 <main class="container my-5">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @foreach ($blogs as $blog)
-        <div class="col">
-            <div class="card mb-3 blog-card">
-                <img src="{{ asset('storage/' . $blog->image) }}" class="card-img-top blog-image" alt="{{ $blog->title }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ Str::words(strip_tags($blog->title), 20, '...') }}</h5>
-                    <p class="card-text blog-description">{{ Str::words(strip_tags($blog->content), 20, '...') }}</p>
-                    <a href="{{ route('blogs.show', $blog->id) }}" class="btn custom-btn">Read More</a>
-                </div>
-            </div>
+    @if ($blogs->isEmpty())
+        <div class="text-center py-5" style="margin: 6.9rem;">
+            <h4>No blogs for now.</h4>
         </div>
-        @endforeach
-    </div>
+    @else
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach ($blogs as $blog)
+                <div class="col">
+                    <div class="card mb-3 blog-card">
+                        <img src="{{ asset('storage/' . $blog->image) }}" class="card-img-top blog-image" alt="{{ $blog->title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ Str::words(strip_tags($blog->title), 20, '...') }}</h5>
+                            <p class="card-text blog-description">{{ Str::words(strip_tags($blog->content), 20, '...') }}</p>
+                            <a href="{{ route('blogs.show', $blog->id) }}" class="btn custom-btn">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
 </main>
+
 
 <style>
     /* Blog description styling */

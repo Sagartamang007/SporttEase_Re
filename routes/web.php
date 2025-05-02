@@ -8,6 +8,9 @@ use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\VendorController;
 use App\Http\Middleware\isVendor;
+use App\Http\Controllers\UserBookingController;
+use App\Http\Controllers\KhaltiPaymentController;
+
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\PasswordResetCodeController;
@@ -26,6 +29,17 @@ Route::get('/futsal/{id}', [PageController::class, 'showFutsal'])->name('futsal.
 Route::get('/blogs', [PageController::class, 'blogs'])->name('blogs');
 Route::get('/blog/{id}', [PageController::class, 'show'])->name('blogs.show');
 
+
+Route::post('/purchase/{booking_id}', [KhaltiPaymentController::class, 'purchase'])->name('khalti.purchase');
+Route::get('/verify-payment', [KhaltiPaymentController::class, 'verifyPayment']);
+Route::post('/khalti/verify', [BookingController::class, 'verifyKhalti'])->name('khalti.verify');
+Route::get('/bookings/success', function () {
+    return view('Frontend.booking_success');
+})->name('bookings.success');
+
+Route::post('/bookings/store-with-payment/{futsal}', [BookingController::class, 'storeWithPayment'])->name('bookings.store.with.payment');
+
+
 // -------------------------
 // 🔹 Authenticated User Routes (Profile & Booking)
 // -------------------------
@@ -35,7 +49,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/bookings/{id}', [PageController::class, 'booking'])->name('booking');
-    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/my-bookings', [UserBookingController::class, 'index'])->name('user.bookings');
+    // In routes/web.php
+
+    Route::patch('booking/cancel/{id}', [UserBookingController::class, 'cancelBooking'])->name('booking.cancel');
+    Route::post('/bookings/{id}', [BookingController::class, 'store'])->name('bookings.store');
+
+    Route::get('pre/bookings', [BookingController::class, 'preBooking'])->name('pre.booking');
+    Route::get('pre/futsal/{id}', [BookingController::class, 'showFutsal'])->name('pre.futsal.details');
+    Route::post('pre/bookings/{id}', [BookingController::class, 'preStore'])->name('pre.booking.store');
 });
 
 // -------------------------
@@ -61,7 +83,7 @@ Route::middleware(['auth', 'isVendor', 'isVendorApproved'])->prefix('vendor')->g
         Route::get('/futsal/{futsalCourt}', [\App\Http\Controllers\FutsalController::class, 'show'])->name('futsal.show');
         Route::get('/futsal/{futsalCourt}/edit', [\App\Http\Controllers\FutsalController::class, 'edit'])->name('futsal.edit');
         Route::put('/futsal/{futsalCourt}', [\App\Http\Controllers\FutsalController::class, 'update'])->name('futsal.update');
-        Route::delete('/futsal/{futsalCourt}', [\App\Http\Controllers\FutsalController::class, 'destroy'])->name('futsal.destroy');
+        Route::delete('/futsal/{futsalCourt}/delete', [\App\Http\Controllers\FutsalController::class, 'destroy'])->name('futsal.destroy');
 
     // ✅ Vendor Profile
     Route::get('/profile', [\App\Http\Controllers\Vendor\PageController::class, 'myprofile'])->name('vendor.profile');
@@ -69,6 +91,8 @@ Route::middleware(['auth', 'isVendor', 'isVendorApproved'])->prefix('vendor')->g
 
     // ✅ Vendor Bookings
     Route::get('/bookings', [\App\Http\Controllers\Vendor\PageController::class, 'bookings'])->name('vendor.bookings');
+    Route::put('/vendor/cancel-booking/{id}', [\App\Http\Controllers\Vendor\PageController::class, 'cancelBooking'])->name('vendor.cancelBooking');
+
 });
 
 // -------------------------

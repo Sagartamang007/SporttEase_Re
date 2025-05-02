@@ -132,6 +132,9 @@
             transform: scale(1.1);
         }
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <main id="main" class="main">
         <div class="container py-5">
@@ -156,7 +159,12 @@
                         <div class="card-body p-4">
                             <form action="{{ route('futsal.store') }}" method="POST" enctype="multipart/form-data" id="futsalForm">
                                 @csrf
-
+                                <div class="form-group mb-3">
+                                    <label for="map">Select Delivery Location</label>
+                                    <div id="map" style="height: 300px;"></div>
+                                </div>
+                                <input type="hidden" name="latitude" id="latitude">
+                                <input type="hidden" name="longitude" id="longitude">
                                 <!-- Basic Information Section -->
                                 <div class="form-section">
                                     <h5 class="text-teal mb-3">
@@ -259,7 +267,7 @@
                                         <label for="hourly_price" class="form-label fw-bold required">Hourly Price</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-teal text-white">
-                                                <i class="bi bi-currency-dollar"></i>
+                                                NRs.
                                             </span>
                                             <input type="number" name="hourly_price" id="hourly_price" class="form-control @error('hourly_price') is-invalid @enderror" min="0" step="0.01" placeholder="0.00" required>
                                         </div>
@@ -315,7 +323,60 @@
             </div>
         </div>
     </main>
+    <script>
+       // Default location fallback (Kathmandu)
+var defaultLat = 27.7172, defaultLng = 85.3240;
 
+        var map = L.map('map').setView([defaultLat, defaultLng], 5);
+
+        // Add OpenStreetMap tiles.
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        // Create a draggable marker at the default location.
+        var marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(map);
+
+        // Function to update the hidden inputs.
+        function updatePosition(lat, lng) {
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+        }
+
+        // Update hidden inputs when the marker is dragged.
+        marker.on('dragend', function(e) {
+            var position = marker.getLatLng();
+            updatePosition(position.lat, position.lng);
+        });
+
+        // Update hidden inputs when the map is clicked (and move the marker).
+        map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+            updatePosition(e.latlng.lat, e.latlng.lng);
+        });
+
+        // Attempt to get the user's current location.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var currentLat = position.coords.latitude;
+                var currentLng = position.coords.longitude;
+                // Set map view to user's location.
+                map.setView([currentLat, currentLng], 13);
+                marker.setLatLng([currentLat, currentLng]);
+                updatePosition(currentLat, currentLng);
+            }, function(error) {
+                console.error("Error getting location: ", error);
+                // If error occurs, fallback to default location.
+                updatePosition(defaultLat, defaultLng);
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+            updatePosition(defaultLat, defaultLng);
+        }
+
+        // Set initial hidden inputs to the default position.
+        updatePosition(defaultLat, defaultLng);
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Image upload functionality

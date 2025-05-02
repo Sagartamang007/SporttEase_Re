@@ -4,22 +4,36 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\User;
+use App\Models\futsal_court;
+
 use Carbon\Carbon; // Don't forget to import Carbon if you're using it
+use Illuminate\Support\Facades\Auth;
+
 
 
 class PageController extends Controller
 {
     public function dashboard(){
-        $totalBookings = Booking::count();
+        $vendorUserId = Auth::id();
+
+        // Get all court ids belonging to this vendor
+        $futsalCourtIds = \App\Models\futsal_court::where('user_id', $vendorUserId)->pluck('id');
+
+        // Get bookings where the futsal_court_id is in the list of courts that belong to this vendor
+        $totalVendorsUsers = Booking::whereIn('futsal_court_id', $futsalCourtIds)->count();
+
+
+
         $todayBookings = Booking::whereDate('created_at', Carbon::today())->count();
         $thisMonthBookings = Booking::whereMonth('created_at', Carbon::now()->month)->count();
         // $canceledBookings = Booking::where('status', 'canceled')->count();
         // $upcomingBookings = Booking::where('status', 'pending')->orderBy('date', 'asc')->take(5)->get();
 
         return view('vendor.dashboard', compact(
-            'totalBookings',
+            'totalVendorsUsers',
             'todayBookings',
-            'thisMonthBookings',
+            // 'thisMonthBookings',
             // 'canceledBookings',
             // 'upcomingBookings'
         ));
@@ -34,10 +48,38 @@ class PageController extends Controller
         $user = auth()->user(); // Ensure you have the user instance here
         return view('Vendor.myprofile', compact('user'));
     }
+    public function cancelBooking($id)
+{
+    // Find the booking by ID
+    $booking = Booking::findOrFail($id);
 
-    public function bookings(){
-        return view('Vendor.bookings');
+    // Check if the booking status is not already 'Cancelled'
+    if ($booking->status != 'Cancelled') {
+        // Update the status to 'Cancelled'
+        $booking->status = 'Cancelled';
+        $booking->save();
+
+        // Optionally, send a notification to the customer about the cancellation
+        // Notification::send($booking->user, new BookingCancelledNotification($booking));
+
+        return redirect()->back()->with('success', 'Booking cancelled successfully.');
     }
+
+    return redirect()->back()->with('error', 'This booking is already cancelled.');
+}
+   public function bookings() {
+    $id = Auth::id();
+
+    $bookings = Booking::with(['futsal_court', 'user'])
+        ->whereHas('futsal_court', function ($query) use ($id) {
+            $query->where('user_id', $id);
+        })
+        ->simplePaginate(2);  // Corrected pagination method
+
+    return view('Vendor.bookings', compact('bookings'));
+}
+
+
 
     public function verification()
     {

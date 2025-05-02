@@ -1,4 +1,7 @@
 <x-app-layout>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <main id="main" class="main py-4 bg-light">
         <div class="container">
             <div class="row justify-content-center">
@@ -48,6 +51,13 @@
                         <form action="{{ route('futsal.update', $futsalCourt->id) }}" method="POST" enctype="multipart/form-data" id="courtForm">
                             @csrf
                             @method('PUT')
+                            <input type="hidden" name="latitude" id="latitude" value="{{ $futsalCourt->latitude }}">
+                            <input type="hidden" name="longitude" id="longitude" value="{{ $futsalCourt->longitude }}">
+                            <div class="mt-4">
+                                <label for="map" class="form-label fw-bold">Update Location on Map</label>
+                                <div id="map" style="height: 300px; border-radius: 8px;"></div>
+                                <small class="text-muted">Drag the marker or click on the map to update location.</small>
+                            </div>
 
                             <div class="card-body p-4">
                                 <div class="tab-content" id="formTabContent">
@@ -115,7 +125,7 @@
                                                         <input type="number" name="hourly_price" id="hourly_price"
                                                             class="form-control"
                                                             value="{{ old('hourly_price', $futsalCourt->hourly_price) }}" required>
-                                                        <label for="hourly_price">Hourly Price ($)</label>
+                                                        <label for="hourly_price">Hourly Price (NRs.)</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -164,7 +174,7 @@
                                                     <i class="bi bi-cloud-arrow-up display-4 text-success mb-2"></i>
                                                     <h5>Upload New Images</h5>
                                                     <p class="text-muted mb-3">Drag and drop files here or click to browse</p>
-                                                    <input type="file" name="futsal_images[]" id="futsal_images" class="form-control position-absolute top-0 left-0 opacity-0 w-100 h-100" style="cursor: pointer;" multiple>
+                                                    <input type="file" name="futsal_images[]" id="futsal_images" class="form-control position-absolute top-0 left-0 opacity-0 w-100 h-100" multiple>
                                                     <div id="file-preview" class="d-flex flex-wrap gap-2 mt-3 justify-content-center"></div>
                                                 </div>
                                             </div>
@@ -222,6 +232,36 @@
             </div>
         </div>
     </main>
+    <script>
+
+// Initialize Leaflet map with saved coords or fallback
+const savedLat = parseFloat(document.getElementById('latitude').value) || 27.7172;
+const savedLng = parseFloat(document.getElementById('longitude').value) || 85.3240;
+
+const map = L.map('map').setView([savedLat, savedLng], 13);
+
+// Add OSM tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+}).addTo(map);
+
+// Draggable marker
+const marker = L.marker([savedLat, savedLng], { draggable: true }).addTo(map);
+
+// Update inputs on drag
+marker.on('dragend', function (e) {
+    const pos = marker.getLatLng();
+    document.getElementById('latitude').value = pos.lat;
+    document.getElementById('longitude').value = pos.lng;
+});
+
+// Update marker & inputs on map click
+map.on('click', function (e) {
+    marker.setLatLng(e.latlng);
+    document.getElementById('latitude').value = e.latlng.lat;
+    document.getElementById('longitude').value = e.latlng.lng;
+});
+        </script>
 
     <style>
     /* Modern, clean styling */

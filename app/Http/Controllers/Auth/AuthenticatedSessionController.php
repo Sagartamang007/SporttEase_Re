@@ -33,8 +33,14 @@ class AuthenticatedSessionController extends Controller
 
         // Redirect based on user type
         if (Auth::user()->type === 0) {
-            // Vendor dashboard
-            return redirect()->route('vendor.verification');
+            // Check if the vendor is approved
+            if (Auth::user()->approved) {
+                // Redirect to the vendor's dashboard if approved
+                return redirect()->route('vendor.dashboard');
+            } else {
+                // Redirect to the vendor verification page if not approved
+                return redirect()->route('vendor.verification');
+            }
         } elseif (Auth::user()->type === 1) {
             // Normal user dashboard (futsal data)
             return redirect()->route('home');

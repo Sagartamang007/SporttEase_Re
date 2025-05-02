@@ -23,7 +23,7 @@
                     <h2 class="futsal-name">{{ $futsal->futsal_name }}</h2>
                     <p><i class="icon fas fa-map-marker-alt"></i> <strong>Location:</strong> {{ $futsal->futsal_location }}</p>
 
-                    <!-- Map Section -->
+                    <!-- MAP SECTION -->
                     <div class="mt-4">
                         <label for="map" class="form-label fw-bold">Location on Map</label>
                         <div id="map" style="height: 300px; border-radius: 8px;"></div>
@@ -32,7 +32,7 @@
                     <p class="mt-4"><i class="icon fas fa-info-circle"></i> <strong>Description:</strong> {{ $futsal->futsal_description }}</p>
                     <p><i class="icon fas fa-clock"></i> <strong>Opening Time:</strong> {{ $futsal->opening_time }}</p>
                     <p><i class="icon fas fa-clock"></i> <strong>Closing Time:</strong> {{ $futsal->closing_time }}</p>
-                    <p><i class="icon fas fa-rupee-sign"></i> <strong>Price per Hour:</strong> NRs.{{ number_format($futsal->hourly_price, 2) }}</p>
+                    <p><i class="icon fas fa-dollar-sign"></i> <strong>Price per Hour:</strong> NRs.{{ number_format($futsal->hourly_price, 2) }}</p>
                 </div>
             </div>
         </div>
@@ -41,16 +41,28 @@
 
 <div class="container py-5">
     <h2 class="text-center mb-4" style="color: #198754;">Book Your Slot</h2>
-    <form id="booking-form" method="POST" action="{{ route('bookings.store.with.payment', $futsal->id) }}">
+    <form id="booking-form" method="POST" action="{{ route('pre.booking.store', $futsal->id) }}">
         @csrf
 
+        <!-- Recurrence Type Dropdown -->
         <div class="mb-3">
-            <label for="calendar">Select a Date:</label>
+            <label for="recurrence_type">Select Recurrence Type:</label>
+            <select name="recurrence_type" id="recurrence_type" class="form-control" required>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+            </select>
+        </div>
+
+        <!-- Start Date Picker -->
+        <div class="mb-3">
+            <label for="calendar">Select a Start Date:</label>
             <div id="calendar"></div>
             <p>Selected Date: <span id="selected-date"></span></p>
             <input type="hidden" name="booking_date" id="booking-date-input" />
         </div>
 
+        <!-- Time Slot Selection -->
         <div class="mb-3">
             <label>Select a Time Slot:</label>
             <div id="time-slots" class="selected-time-section"></div>
@@ -62,14 +74,16 @@
     </form>
 </div>
 
-<!-- Include Leaflet + Flatpickr -->
+<!-- External CSS & JS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<!-- Pass bookings data to JS -->
-<script>const bookings = @json($bookings);</script>
+<!-- Pass bookings data to JavaScript -->
+<script>
+    const bookings = @json($bookings);
+</script>
 
 <!-- MAP SCRIPT -->
 <script>
@@ -87,7 +101,7 @@ L.marker([savedLat, savedLng]).addTo(map)
     .openPopup();
 </script>
 
-<!-- BOOKING SLOT SCRIPT -->
+<!-- BOOKING SCRIPT -->
 <script>
 const calendar = document.getElementById("calendar");
 const selectedDateText = document.getElementById("selected-date");
@@ -96,8 +110,10 @@ const continueButton = document.getElementById("continue-button");
 const timeSlotsContainer = document.getElementById('time-slots');
 const startTimeHidden = document.getElementById('selected-start-time-input');
 const endTimeHidden = document.getElementById('selected-end-time-input');
+const recurrenceTypeSelect = document.getElementById("recurrence_type");
 
 let selectedTimeSlot = false;
+let recurrenceCount = 0;
 
 const openTime = "{{ \Carbon\Carbon::parse($futsal->opening_time)->format('H:i') }}";
 const closeTime = "{{ \Carbon\Carbon::parse($futsal->closing_time)->format('H:i') }}";
@@ -116,6 +132,19 @@ flatpickr(calendar, {
         generateAvailableTimeSlots(dateStr);
         toggleContinueButton();
     }
+});
+
+recurrenceTypeSelect.addEventListener('change', function() {
+    const selectedType = recurrenceTypeSelect.value;
+    if (selectedType === "daily") {
+        recurrenceCount = 1;
+    } else if (selectedType === "weekly") {
+        recurrenceCount = 7;
+    } else if (selectedType === "monthly") {
+        recurrenceCount = 30;
+    }
+
+    toggleContinueButton();
 });
 
 function generateAvailableTimeSlots(dateStr) {
@@ -172,12 +201,12 @@ function generateTimeSlots(start, end) {
     endTime.setHours(endHour, endMinute, 0, 0);
 
     while (current < endTime) {
-        const slotStart = current.toTimeString().slice(0, 5);
-        const next = new Date(current.getTime() + 60 * 60 * 1000); // +1 hour
+        const slotStart = current.toTimeString().slice(0,5);
+        const next = new Date(current.getTime() + 60 * 60 * 1000);
 
         if (next > endTime) break;
 
-        const slotEnd = next.toTimeString().slice(0, 5);
+        const slotEnd = next.toTimeString().slice(0,5);
         slots.push({ start: slotStart, end: slotEnd });
 
         current = next;
@@ -190,5 +219,4 @@ function toggleContinueButton() {
     continueButton.disabled = !(bookingDateInput.value && selectedTimeSlot);
 }
 </script>
-
 @endsection

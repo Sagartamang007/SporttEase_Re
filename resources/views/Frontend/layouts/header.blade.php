@@ -17,6 +17,9 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('aboutus') }}">About Us</a></li>
 
                 <li class="nav-item"><a class="nav-link" href="{{route('blogs')}}">Blogs</a></li>
+                @auth
+                <li class="nav-item"><a class="nav-link" href="{{route('pre.booking')}}">PreBooking</a></li>
+                @endauth
 
                 <li class="nav-item"><a class="nav-link" href="{{route('contactus')}}">Contact Us</a></li>
 
@@ -59,7 +62,7 @@
                 @endif
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                <li><a class="dropdown-item" href="#">My Bookings</a></li>
+                <li><a class="dropdown-item" href="{{route('user.bookings')}}">My Bookings</a></li>
                 <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Edit Profile</a></li>
                 <li>
                     <a class="dropdown-item" href="{{ route('logout') }}"

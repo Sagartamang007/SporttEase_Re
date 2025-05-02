@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     <div class="card-footer bg-white border-top-0 text-center">
-                        <a href="{{ route('booking', $futsal->id) }}" class="btn w-100" style="background-color: #198754; color: white;">Book Now</a>
+                        <a href="{{ route('pre.futsal.details', $futsal->id) }}" class="btn w-100" style="background-color: #198754; color: white;">Book Now</a>
                     </div>
                 </div>
             </div>

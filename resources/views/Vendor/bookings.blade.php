@@ -2,6 +2,7 @@
     <main id="main" class="main">
         <section class="section">
             <div class="row">
+
                 <!-- Booking Table -->
                 <div class="col-12">
                     <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
@@ -27,128 +28,64 @@
                                             <th class="ps-4">Customer</th>
                                             <th>Date</th>
                                             <th>Time Slot</th>
-                                            <th>Court</th>
-                                            <th class="text-end pe-4">Status</th>
+                                            <th>Status</th>
+                                            <th>Court No.</th> <!-- NEW -->
+                                            <th>Payment</th> <!-- NEW -->
+                                            <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Booking Entries -->
+                                        @foreach ($bookings as $booking)
                                         <tr>
                                             <td class="ps-4">
                                                 <div class="d-flex align-items-center">
-                                                    <div class="avatar-circle">JD</div>
+                                                    <div class="avatar-circle">{{ substr($booking->user->name, 0, 2) }}</div>
                                                     <div class="ms-2">
-                                                        <div class="fw-semibold">John Doe</div>
-                                                        <div class="text-muted small">john@example.com</div>
+                                                        <div class="fw-semibold">{{$booking->user->name}}</div>
+                                                        <div class="text-muted small">{{$booking->user->email}}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="bi bi-calendar-event text-muted me-2"></i>
-                                                    <span>Mar 16, 2025</span>
-                                                </div>
+                                                {{ \Carbon\Carbon::parse($booking->date)->format('d M, Y') }}
                                             </td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="bi bi-clock text-muted me-2"></i>
-                                                    <span>10:00 AM - 12:00 PM</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light text-dark">Court 1</span>
+                                                {{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }} -
+                                                {{ \Carbon\Carbon::parse($booking->end_time)->format('h:i A') }}
                                             </td>
                                             <td class="text-end pe-4">
-                                                <span class="badge bg-success-subtle text-success">Confirmed</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="ps-4">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-circle bg-info-subtle">JS</div>
-                                                    <div class="ms-2">
-                                                        <div class="fw-semibold">Jane Smith</div>
-                                                        <div class="text-muted small">jane@example.com</div>
-                                                    </div>
-                                                </div>
+                                                <span class="badge bg-success-subtle text-success">{{$booking->status}}</span>
                                             </td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="bi bi-calendar-event text-muted me-2"></i>
-                                                    <span>Mar 17, 2025</span>
-                                                </div>
+                                                {{ $booking->court->name ?? 'Court #' . $booking->futsal_court_id }}
                                             </td>
+
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="bi bi-clock text-muted me-2"></i>
-                                                    <span>2:00 PM - 4:00 PM</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light text-dark">Court 2</span>
+                                                @if ($booking->payment_method)
+                                                    <span class="badge bg-info-subtle text-info text-capitalize">
+                                                        {{ $booking->payment_method }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-warning-subtle text-warning">Cash</span>
+                                                @endif
                                             </td>
                                             <td class="text-end pe-4">
-                                                <span class="badge bg-success-subtle text-success">Confirmed</span>
+                                                <!-- Cancel Button -->
+                                                @if (strtolower($booking->status) !== 'cancelled')
+                                                    <form action="{{ route('vendor.cancelBooking', $booking->id) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            <i class="bi bi-x-circle"></i> Cancel
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <span class="text-muted">Cancelled</span>
+                                                @endif
                                             </td>
+
                                         </tr>
-                                        <tr>
-                                            <td class="ps-4">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-circle bg-warning-subtle">MT</div>
-                                                    <div class="ms-2">
-                                                        <div class="fw-semibold">Mike Taylor</div>
-                                                        <div class="text-muted small">mike@example.com</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="bi bi-calendar-event text-muted me-2"></i>
-                                                    <span>Mar 18, 2025</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="bi bi-clock text-muted me-2"></i>
-                                                    <span>9:00 AM - 11:00 AM</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light text-dark">Court 1</span>
-                                            </td>
-                                            <td class="text-end pe-4">
-                                                <span class="badge bg-warning-subtle text-warning">Pending</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="ps-4">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-circle bg-danger-subtle">ED</div>
-                                                    <div class="ms-2">
-                                                        <div class="fw-semibold">Emily Davis</div>
-                                                        <div class="text-muted small">emily@example.com</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="bi bi-calendar-event text-muted me-2"></i>
-                                                    <span>Mar 19, 2025</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="bi bi-clock text-muted me-2"></i>
-                                                    <span>1:00 PM - 3:00 PM</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light text-dark">Court 3</span>
-                                            </td>
-                                            <td class="text-end pe-4">
-                                                <span class="badge bg-success-subtle text-success">Confirmed</span>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -163,19 +100,12 @@
                             </div>
                         </div>
                         <div class="card-footer bg-white d-flex justify-content-between align-items-center py-3">
-                            <div class="text-muted small">Showing 4 of 4 bookings</div>
                             <!-- Pagination -->
+
+
                             <nav aria-label="Page navigation">
                                 <ul class="pagination pagination-sm mb-0">
-                                    <li class="page-item disabled">
-                                        <span class="page-link">Previous</span>
-                                    </li>
-                                    <li class="page-item active">
-                                        <span class="page-link">1</span>
-                                    </li>
-                                    <li class="page-item disabled">
-                                        <span class="page-link">Next</span>
-                                    </li>
+                                    {{ $bookings->links() }}
                                 </ul>
                             </nav>
                         </div>

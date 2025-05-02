@@ -13,7 +13,8 @@ class CreateBookingsTable extends Migration
             $table->date('date');  // To store the selected date
             $table->string('start_time');  // To store the selected start time
             $table->string('end_time');  // To store the selected end time
-            $table->string('user_name');  // To store the logged-in user's name
+            $table->foreignId('futsal_court_id');
+           $table->foreignId('user_id');  // To store the logged-in user's name
             $table->timestamps();  // Automatically adds created_at and updated_at columns
         });
     }

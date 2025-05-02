@@ -112,13 +112,6 @@
             <div class="code" aria-label="Your verification code">{{ $code }}</div>
         </div>
         <div class="expiry">This code will expire in <strong>15 minutes</strong></div>
-        <a href="{{ route('password.resetForm') }}" class="btn">Reset Password</a>
-        <div class="footer">
-            If you did not request this password reset, please ignore this email or contact support if you have concerns.
-        </div>
-        <div class="help-text">
-            Need help? Reply to this email or contact our support team.
-        </div>
     </div>
 </body>
 </html>

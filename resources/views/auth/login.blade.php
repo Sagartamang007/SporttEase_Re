@@ -2,10 +2,11 @@
     <!-- Outer Div for Form Container -->
     <div class="flex justify-center items-center w-full h-screen bg-login">
         @if (session('success'))
-            <div class="alert alert-success">
+            <div id="success-message" class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
+
         <div class="login-container">
             <!-- Logo or Title -->
             <div class="login-logo">
@@ -58,9 +59,8 @@
                 <div class="form-footer mt-4">
                     @if (Route::has('password.request'))
                         <a class="underline text-sm text-gray-600 hover:text-gray-900"
-                            href="{{ route('password.request') }}">
-                            {{ __('Forgot your password?') }}
-                        </a>
+                            href="{{ route('password.request') }}">{{
+                            __('Forgot your password?') }}</a>
                     @endif
 
                     <x-primary-button class="btn-submit">
@@ -78,6 +78,29 @@
 
     <!-- Custom CSS -->
     <style>
+        /* Success and Error Message Styling */
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 300px;
+            z-index: 1000;
+        }
+
+        .alert-success {
+            background-color: #4caf50; /* Green */
+            color: white;
+        }
+
+        .alert-danger {
+            background-color: #f44336; /* Red */
+            color: white;
+        }
+
         /* Form Container Styling */
         .login-container {
             width: 100%;
@@ -123,7 +146,7 @@
         .btn-submit {
             width: 70%;
             justify-content: center;
-            background-color:#239123;
+            background-color: #239123;
             color: white;
             padding: 12px;
             border-radius: 5px;
@@ -203,8 +226,15 @@
         }
     </style>
 
-    <!-- JavaScript for Password Visibility Toggle -->
+    <!-- JavaScript for Password Visibility Toggle and Success Message -->
     <script>
+        // Hide success message after 5 seconds
+        if (document.getElementById('success-message')) {
+            setTimeout(function() {
+                document.getElementById('success-message').style.display = 'none';
+            }, 5000); // 5 seconds
+        }
+
         document.getElementById('password-toggle').addEventListener('click', function() {
             var passwordInput = document.getElementById('password');
             var passwordToggleIcon = document.getElementById('password-toggle');

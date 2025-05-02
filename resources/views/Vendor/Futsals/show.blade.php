@@ -19,7 +19,7 @@
                             </p>
                             <div class="d-flex flex-wrap gap-2 mt-2">
                                 <span class="badge bg-success rounded-3 px-3 py-2">
-                                    <i class="bi bi-cash-coin me-1"></i>${{ $futsalCourt->hourly_price }}/hour
+                                    <i class="bi bi-cash-coin me-1"></i>NRs.{{ $futsalCourt->hourly_price }}/hour
                                 </span>
                                 <span class="badge bg-success rounded-3 px-3 py-2">
                                     <i class="bi bi-hash me-1"></i>{{ $futsalCourt->num_court }} Courts

@@ -53,4 +53,18 @@ class User extends Authenticatable
         return $this->hasOne(Vendor::class);
     }
 
+    public function booking(){
+        return $this->hasMany(Booking::class);
+    }
+    // Define relationship to bookings
+    public function vendorBookings()
+    {
+        return $this->hasMany(Booking::class, 'futsal_court_id', 'id'); // Assuming futsal_court_id is the foreign key in the bookings table
+    }
+
+    // Define relationship to vendor users (if applicable)
+    public function vendorUsers()
+    {
+        return $this->hasMany(User::class, 'vendor_id', 'id'); // Adjust according to your structure
+    }
 }
