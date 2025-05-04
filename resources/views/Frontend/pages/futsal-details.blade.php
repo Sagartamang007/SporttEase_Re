@@ -35,7 +35,7 @@
                             </div>
                             <div class="row mb-2">
                                 <div class="col-lg-4 fw-bold">Price:</div>
-                                <div class="col-lg-8 fs-5 text-success">${{ number_format($futsal->hourly_price, 2) }} / hour</div>
+                                <div class="col-lg-8 fs-5 text-success">NRs.{{ number_format($futsal->hourly_price, 2) }} / hour</div>
                             </div>
                         </div>
 

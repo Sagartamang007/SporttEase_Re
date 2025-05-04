@@ -1,47 +1,136 @@
-<x-guest-layout>
-    <div class="max-w-lg w-full mx-auto p-6 bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700">
-        <div class="mb-6 text-center">
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('Forgot Password') }}</h2>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                {{ __('Forgot your password? No worries, just enter your email below and we’ll send you a link to reset your password.') }}
-            </p>
+    <x-guest-layout>
+        <div class="d-flex justify-content-center align-items-center"
+            style="background: linear-gradient(120deg, #e0f7fa, #e0ffe0); height:100vh">
+            <div class="card glass-card shadow-lg border-0 p-4 rounded-4" style="max-width: 420px; width: 100%;">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="icon-circle mb-3">
+                            <i class="fas fa-lock fs-2 text-white"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-1">{{ __('Forgot Password') }}</h4>
+                        <p class="text-muted small">
+                            {{ __("Enter your email and we'll send you an OTP to reset your password.") }}</p>
+                    </div>
+
+                    @if (session('status'))
+                        <div class="alert alert-success small text-center py-2 fade show rounded-3" role="alert">
+                            <i class="fas fa-check-circle me-1 text-success"></i> {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('password.email') }}">
+                        @csrf
+
+                        <!-- Email Input -->
+                        <div class="mb-4">
+                            <label for="email" class="form-label text-dark">{{ __('Email address') }}</label>
+                            <div class="input-group rounded-3 shadow-sm overflow-hidden">
+                                <span class="input-group-text bg-white border-0">
+                                    <i class="fas fa-envelope text-success"></i>
+                                </span>
+                                <input type="email" name="email" id="email"
+                                    class="form-control border-0 @error('email') is-invalid @enderror"
+                                    value="{{ old('email') }}" required autofocus placeholder="you@example.com">
+                            </div>
+                            @error('email')
+                                <div class="invalid-feedback d-block mt-1">
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+
+                        <!-- Submit -->
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-success py-3 fw-semibold rounded-3">
+                                <i class="fas fa-paper-plane me-1"></i> {{ __('Send OTP') }}
+                            </button>
+                        </div>
+
+                        <!-- Back to login -->
+                        <div class="text-center">
+                            <a href="{{ route('login') }}" class="text-decoration-none text-success">
+                                <i class="fas fa-arrow-left me-1"></i> {{ __('Back to login') }}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
 
-        <form method="POST" action="{{ route('password.email') }}" class="space-y-6">
-            @csrf
+            .glass-card {
+                background: rgba(255, 255, 255, 0.75);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            }
 
-            <!-- Email Address -->
-            <div>
-                <x-input-label for="email" :value="__('Email')" class="text-sm font-medium text-gray-700 dark:text-gray-300" />
-                <x-text-input
-                    id="email"
-                    class="mt-2 block w-full px-4 py-3 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 dark:text-white"
-                    type="email"
-                    name="email"
-                    :value="old('email')"
-                    required
-                    autofocus
-                    placeholder="your@email.com"
-                />
-                <x-input-error :messages="$errors->get('email')" class="mt-2 text-xs text-red-500" />
-            </div>
+            .icon-circle {
+                width: 70px;
+                height: 70px;
+                background: linear-gradient(135deg, #28a745, #218838);
+                border-radius: 50%;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 5px 15px rgba(33, 136, 56, 0.3);
+            }
 
-            <!-- Send Code Button -->
-            <div>
-                <x-primary-button class="w-full py-3 px-4 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md shadow-md">
-                    {{ __('Send Reset Link') }}
-                </x-primary-button>
-            </div>
+            .form-control {
+                padding: 0.75rem 1rem;
+                transition: all 0.3s ease;
+            }
 
-            <!-- Back to Login Link -->
-            <div class="text-center mt-4">
-                <a href="{{ route('login') }}" class="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-                    {{ __('Remembered your password? Back to login') }}
-                </a>
-            </div>
-        </form>
-    </div>
-</x-guest-layout>
+            .form-control:focus {
+                border-color: #198754;
+                box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.2);
+            }
+
+            .btn-success {
+                transition: all 0.3s ease;
+            }
+
+            .btn-success:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 12px rgba(25, 135, 84, 0.25);
+            }
+
+            .alert {
+                animation: fadeIn 0.4s ease-in-out;
+            }
+
+            .input-group .form-control,
+            .input-group .input-group-text {
+                background-color: #fff;
+                border-radius: 0 !important;
+            }
+
+            .input-group {
+                border: 1px solid #ced4da;
+                border-radius: 0.5rem;
+                transition: box-shadow 0.3s ease;
+            }
+
+            .input-group:focus-within {
+                box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+                border-color: #198754;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </x-guest-layout>

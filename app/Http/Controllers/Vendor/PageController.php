@@ -15,27 +15,22 @@ use Illuminate\Support\Facades\Auth;
 class PageController extends Controller
 {
     public function dashboard(){
+        // Get the authenticated user's ID
         $vendorUserId = Auth::id();
 
-        // Get all court ids belonging to this vendor
+        // Get all futsal court IDs belonging to this vendor
         $futsalCourtIds = \App\Models\futsal_court::where('user_id', $vendorUserId)->pluck('id');
 
-        // Get bookings where the futsal_court_id is in the list of courts that belong to this vendor
-        $totalVendorsUsers = Booking::whereIn('futsal_court_id', $futsalCourtIds)->count();
+        // Get the total number of bookings for the futsal courts belonging to this vendor
+        $totalVendorsUsers = \App\Models\Booking::whereIn('futsal_court_id', $futsalCourtIds)->count();
 
+        // Get the number of bookings made today
+        $todayBookings = \App\Models\Booking::whereDate('created_at', Carbon::today())->count();
 
-
-        $todayBookings = Booking::whereDate('created_at', Carbon::today())->count();
-        $thisMonthBookings = Booking::whereMonth('created_at', Carbon::now()->month)->count();
-        // $canceledBookings = Booking::where('status', 'canceled')->count();
-        // $upcomingBookings = Booking::where('status', 'pending')->orderBy('date', 'asc')->take(5)->get();
-
+        // Return the data to the view
         return view('vendor.dashboard', compact(
             'totalVendorsUsers',
-            'todayBookings',
-            // 'thisMonthBookings',
-            // 'canceledBookings',
-            // 'upcomingBookings'
+            'todayBookings'
         ));
     }
 
@@ -74,7 +69,7 @@ class PageController extends Controller
         ->whereHas('futsal_court', function ($query) use ($id) {
             $query->where('user_id', $id);
         })
-        ->simplePaginate(2);  // Corrected pagination method
+        ->simplePaginate(15);  // Corrected pagination method
 
     return view('Vendor.bookings', compact('bookings'));
 }

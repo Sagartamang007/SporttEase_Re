@@ -34,7 +34,8 @@ class PasswordResetCodeController extends Controller
             return back()->withErrors(['code' => 'Invalid verification code.']);
         }
 
-        return redirect()->route('password.resetForm', ['email' => $request->email]);
+        return redirect()->route('password.resetForm', ['email' => $request->email])->with('status', 'A 6-digit verification code has been sent to your email.');
+        ;
     }
 
     /**

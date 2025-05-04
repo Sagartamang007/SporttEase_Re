@@ -268,18 +268,18 @@
 </div>
 
 <script>
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
+    // function previewImage(input) {
+    //     if (input.files && input.files[0]) {
+    //         var reader = new FileReader();
 
-            reader.onload = function(e) {
-                document.getElementById('preview').src = e.target.result;
-                document.querySelector('.image-preview-label').textContent = 'New Image';
-            }
+    //         reader.onload = function(e) {
+    //             document.getElementById('preview').src = e.target.result;
+    //             document.querySelector('.image-preview-label').textContent = 'New Image';
+    //         }
 
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+    //         reader.readAsDataURL(input.files[0]);
+    //     }
+    // }
 
     // Add file name display
     document.getElementById('image').addEventListener('change', function() {

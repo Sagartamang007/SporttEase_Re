@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
 // -------------------------
 // 🔹 Vendor Verification Routes (Before Approval)
 // -------------------------
-Route::middleware(['auth', 'isVendor'])->prefix('vendor')->group(function () {
+Route::middleware(['auth', 'isVendor', 'isVendorRejected'])->prefix('vendor')->group(function () {
     Route::get('/verification', [VendorController::class, 'showForm'])->name('vendor.verification');
     Route::post('/verification', [VendorController::class, 'submitForm']);
 });

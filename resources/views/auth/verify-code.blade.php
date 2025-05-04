@@ -1,102 +1,296 @@
 <x-guest-layout>
-    <div class="max-w-sm w-full mx-auto p-5 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
-        <div class="text-center mb-5">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ __('Verify Code') }}</h2>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                {{ __('Enter the 6-digit code sent to your email to reset your password.') }}
-            </p>
-        </div>
-
-        <form method="POST" action="{{ route('password.verifyCode') }}" class="space-y-4">
-            @csrf
-            <input type="hidden" name="email" value="{{ request()->email }}">
-
-            <div>
-                <div class="relative">
-                    <x-text-input
-                        id="code"
-                        class="block w-full px-4 py-3 text-center tracking-widest text-xl font-medium bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 dark:text-white transition-all duration-200"
-                        type="text"
-                        name="code"
-                        maxlength="6"
-                        pattern="[0-9]{6}"
-                        inputmode="numeric"
-                        autocomplete="one-time-code"
-                        placeholder="• • • • • •"
-                        required
-                        autofocus
-                    />
+    <div class="d-flex justify-content-center align-items-center"
+        style="background: linear-gradient(120deg, #e0f7fa, #e0ffe0); height:100vh">
+        <div class="card glass-card shadow-lg border-0 p-4 rounded-4" style="max-width: 420px; width: 100%;">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-shield-alt fs-2 text-white"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-1">{{ __('Verify Code') }}</h4>
+                    <p class="text-muted small">
+                        {{ __('Enter the 6-digit code sent to your email to reset your password.') }}</p>
                 </div>
-                <x-input-error :messages="$errors->get('code')" class="mt-1.5 text-xs text-center" />
-            </div>
+            <form method="POST" action="{{ route('password.verifyCode') }}">
+                @csrf
+                <input type="hidden" name="email" value="{{ request()->email }}">
 
-            <div>
-                <x-primary-button class="w-full justify-center py-3 px-4 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-lg transition-colors duration-200 shadow-md">
-                    {{ __('Verify Code') }}
-                </x-primary-button>
-            </div>
+                <div class="mb-4">
+                    <label for="code" class="form-label text-dark">{{ __('Verification Code') }}</label>
+                    <div class="input-group rounded-3 shadow-sm overflow-hidden">
+                        <span class="input-group-text bg-white border-0">
+                            <i class="fas fa-lock text-success"></i>
+                        </span>
+                        <x-text-input
+                            id="code"
+                            class="form-control border-0 text-center fw-bold fs-4 letter-spacing"
+                            type="text"
+                            name="code"
+                            maxlength="6"
+                            pattern="[0-9]{6}"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            placeholder="• • • • • •"
+                            required
+                            autofocus
+                        />
+                    </div>
+                    <x-input-error :messages="$errors->get('code')" class="invalid-feedback d-block mt-1" />
+                </div>
 
-            <div class="text-center pt-2 space-y-2">
-                <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ __("Didn't receive the code?") }}
-                    <a href="{{ route('password.request') }}" class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium ml-1 hover:underline">
-                        {{ __('Resend') }}
+                <div class="d-grid mb-3">
+                    <x-primary-button class="btn btn-success py-3 fw-semibold rounded-3">
+                        <i class="fas fa-check-circle me-1"></i> {{ __('Verify Code') }}
+                    </x-primary-button>
+                </div>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted small mb-2">
+                        {{ __("Didn't receive the code?") }}
+                        <a href="{{ route('password.request') }}" class="text-decoration-none text-success fw-semibold">
+                            {{ __('Resend') }}
+                            <i class="fas fa-sync-alt ms-1"></i>
+                        </a>
+                    </p>
+                    <a href="{{ route('login') }}" class="text-decoration-none text-success">
+                        <i class="fas fa-arrow-left me-1"></i> {{ __('Back to login') }}
                     </a>
-                </p>
-                <a href="{{ route('login') }}" class="inline-block text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 hover:underline">
-                    {{ __('Back to login') }}
-                </a>
-            </div>
-        </form>
-    </div>
-
-    <!-- ✅ Success Toast Notification -->
-    <div id="toast-notification"
-        class="fixed top-5 right-5 md:right-10 z-50 bg-green-600 text-white rounded-lg shadow-lg p-4 flex items-center space-x-3 transition-all transform opacity-0 translate-x-20 md:max-w-xs w-11/12 sm:w-auto"
-        style="display: none;">
-
-        <div class="flex items-center justify-center w-8 h-8 bg-white bg-opacity-25 rounded-lg">
-            <svg class="w-5 h-5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
+                </div>
+            </form>
         </div>
-        <div class="text-sm font-medium">
-            {{ __('A 6-digit verification code has been sent to your email.') }}
-        </div>
-        <button type="button"
-            class="ml-auto text-white hover:text-gray-100 p-1.5 focus:outline-none"
-            onclick="closeToast()">
-            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
     </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            showToast();
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
+    <div id="toast-notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success bg-opacity-10 border-bottom border-success border-opacity-25">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong class="me-auto text-success">Success</strong>
+            <small class="text-muted">Just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" onclick="closeToast()"></button>
+        </div>
+        <div class="toast-body bg-white">
+            <p class="mb-1">{{ __('A 6-digit verification code has been sent to your email.') }}</p>
+            <p class="mb-0 small text-muted">{{ __('Please check your inbox and spam folder.') }}</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .icon-circle {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #28a745, #218838);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(33, 136, 56, 0.3);
+        position: relative;
+        z-index: 1;
+    }
+
+    .icon-circle::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #28a745, #218838);
+        opacity: 0.3;
+        z-index: -1;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 0.3;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 0.3;
+        }
+    }
+
+    .form-control {
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #198754;
+        box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.2);
+    }
+
+    .letter-spacing {
+        letter-spacing: 0.5rem;
+    }
+
+    .btn-success {
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #28a745, #218838);
+        border: none;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(25, 135, 84, 0.25);
+    }
+
+    .btn-success:active {
+        transform: translateY(1px);
+    }
+
+    .input-group .form-control,
+    .input-group .input-group-text {
+        background-color: #fff;
+        border-radius: 0 !important;
+    }
+
+    .input-group {
+        border: 1px solid #ced4da;
+        border-radius: 0.5rem;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .input-group:focus-within {
+        box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+        border-color: #198754;
+    }
+
+    .toast {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid #28a745;
+        animation: slideIn 0.5s ease forwards;
+        width: 350px;
+        max-width: 90vw;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .progress-bar {
+        transition: width 1s linear;
+    }
+
+    .invalid-feedback {
+        display: flex;
+        align-items: center;
+    }
+
+    .invalid-feedback::before {
+        content: "\f071";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        margin-right: 0.5rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Bootstrap toast
+        const toastElement = document.getElementById('toast-notification');
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 6000
         });
 
-        function showToast() {
-            const toast = document.getElementById('toast-notification');
-            toast.style.display = 'flex';
-            setTimeout(() => {
-                toast.classList.remove('opacity-0', 'translate-x-20');
-                toast.classList.add('opacity-100', 'translate-x-0');
-            }, 100);
+        // Show toast
+        toast.show();
 
-            // Auto-close after 5 seconds
-            setTimeout(() => {
-                closeToast();
-            }, 5000);
-        }
+        // Format code input
+        const codeInput = document.getElementById('code');
 
-        function closeToast() {
-            const toast = document.getElementById('toast-notification');
-            toast.classList.add('opacity-0', 'translate-x-20');
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 300);
+        codeInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+
+            // Remove non-digits
+            value = value.replace(/[^\d]/g, '');
+
+            // Limit to 6 digits
+            if (value.length > 6) {
+                value = value.slice(0, 6);
+            }
+
+            e.target.value = value;
+
+            // Add visual feedback when typing
+            if (value.length > 0) {
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+            }
+        });
+
+        // Countdown timer with progress bar
+        startCountdown(5 * 60); // 5 minutes
+    });
+
+    function startCountdown(duration) {
+        let timer = duration;
+        const countdownEl = document.getElementById('countdown');
+        const progressBar = document.getElementById('countdown-progress');
+
+        const interval = setInterval(function() {
+            const minutes = Math.floor(timer / 60);
+            const seconds = timer % 60;
+
+            // Update text
+            countdownEl.textContent = `Code expires in ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // Update progress bar
+            const percentLeft = (timer / duration) * 100;
+            progressBar.style.width = percentLeft + '%';
+
+            // Change color as time runs out
+            if (percentLeft < 30) {
+                progressBar.classList.remove('bg-success');
+                progressBar.classList.add('bg-danger');
+            }
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                countdownEl.textContent = 'Code expired';
+                countdownEl.classList.add('text-danger');
+                progressBar.style.width = '0%';
+            }
+        }, 1000);
+    }
+
+    function closeToast() {
+        const toastElement = document.getElementById('toast-notification');
+        const toast = bootstrap.Toast.getInstance(toastElement);
+        if (toast) {
+            toast.hide();
         }
-    </script>
+    }
+</script>
+
 </x-guest-layout>
